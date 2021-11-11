@@ -21,8 +21,8 @@ import java.util.regex.PatternSyntaxException;
 public class View extends BaseView{
     JFrame frameRegisterBed;
     public View() {
-        super("Vulcano ®");
-        super.showWindow(loginContainer(), 620,520);
+        super("Vulcano");
+        super.showWindow(projectsContainer(), 620,520);
     }
 
     private Container loginContainer() {
@@ -153,5 +153,67 @@ public class View extends BaseView{
         return loginContainer;
     }
 
+    private Container projectsContainer() {
+
+        JPanel projectsContainer = new JPanel();
+        projectsContainer.setLayout(null);
+
+
+        /*------------------------menu-------------------------*/
+        JPanel menu = new JPanel();
+        menu.setLayout(new GridLayout(10,1));
+        menu.setBounds(0,0,100,482);
+        JButton botao = new JButton();
+        botao.setText("projetos");
+        JButton botao1 = new JButton();
+        botao1.setText("usuarios");
+        JButton botao2 = new JButton();
+        botao2.setText("logOut");
+        JPanel menuSpace = new JPanel();
+        menuSpace.setLayout(null);
+        JPanel menuSpace1 = new JPanel();
+        menuSpace1.setLayout(null);
+        JPanel menuSpace2 = new JPanel();
+        menuSpace2.setLayout(null);
+        JPanel menuSpace3 = new JPanel();
+        menuSpace3.setLayout(null);
+        JPanel menuSpace4 = new JPanel();
+        menuSpace4.setLayout(null);
+        JPanel menuSpace5 = new JPanel();
+        menuSpace5.setLayout(null);
+        JPanel menuSpace6 = new JPanel();
+        menuSpace6.setLayout(null);
+
+
+
+        menu.add(botao);
+        menu.add(botao1);
+        menu.add(menuSpace);
+        menu.add(menuSpace1);
+        menu.add(menuSpace2);
+        menu.add(menuSpace3);
+        menu.add(menuSpace4);
+        menu.add(menuSpace5);
+        menu.add(menuSpace6);
+        menu.add(botao2);
+
+        JTextField userInput = super.createTextField(219, 180, 200, 20);
+        JPasswordField passInput = super.createPasswordField(219, 206, 200, 20);
+        JButton registerButton = super.createButton("Crie uma", 340, 400, 81, 20);
+        JButton loginButton = super.createButton("Entrar", 219, 232, 200, 20);
+        projectsContainer.add(super.createInputLabel("Usuário:", 155, 180, 60, 20));
+        projectsContainer.add(super.createInputLabel("Senha:", 155, 206, 60, 20));
+        projectsContainer.add(super.createTextLabel("Não tem uma conta?", 219, 400, 120, 20));
+
+
+        projectsContainer.add(userInput);
+        projectsContainer.add(passInput);
+        projectsContainer.add(loginButton);
+        projectsContainer.add(registerButton);
+        projectsContainer.add(menu);
+        projectsContainer.setVisible(true);
+
+        return projectsContainer;
+    }
     
 }
