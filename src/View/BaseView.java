@@ -31,6 +31,93 @@ public class BaseView extends JFrame {
         super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
+    public JPanel menuCreate(int width, int height, int mode, JButton botao, JButton botao1, JButton botao2, JButton botao3, JButton botao4){
+        JPanel menu = new JPanel();
+        menu.setLayout(new GridLayout(10,1));
+        menu.setBounds(0,0,width,height);
+        botao.setText("Projetos");
+        botao1.setText("Usuarios");
+        botao2.setText("Sair");
+        botao2.setText("Requisitos");
+        botao2.setText("voltar");
+        JPanel menuSpace = new JPanel();
+        menuSpace.setLayout(null);
+        JPanel menuSpace1 = new JPanel();
+        menuSpace1.setLayout(null);
+        JPanel menuSpace2 = new JPanel();
+        menuSpace2.setLayout(null);
+        JPanel menuSpace3 = new JPanel();
+        menuSpace3.setLayout(null);
+        JPanel menuSpace4 = new JPanel();
+        menuSpace4.setLayout(null);
+        JPanel menuSpace5 = new JPanel();
+        menuSpace5.setLayout(null);
+        JPanel menuSpace6 = new JPanel();
+        menuSpace6.setLayout(null);
+        JLabel usersPage = new JLabel("Usuarios");
+        JLabel projectsPage = new JLabel("Projetos");
+
+
+        if(mode == 0){
+            menu.add(botao);
+            menu.add(botao1);
+            menu.add(menuSpace);
+            menu.add(menuSpace1);
+            menu.add(menuSpace2);
+            menu.add(menuSpace3);
+            menu.add(menuSpace4);
+            menu.add(menuSpace5);
+            menu.add(menuSpace6);
+            menu.add(botao2);
+        }else if(mode == 1){
+            menu.add(projectsPage);
+            menu.add(botao1);
+            menu.add(menuSpace);
+            menu.add(menuSpace1);
+            menu.add(menuSpace2);
+            menu.add(menuSpace3);
+            menu.add(menuSpace4);
+            menu.add(menuSpace5);
+            menu.add(menuSpace6);
+            menu.add(botao2);
+        }else if(mode == 2){
+            menu.add(botao);
+            menu.add(botao1);
+            menu.add(menuSpace);
+            menu.add(botao3);
+            menu.add(menuSpace2);
+            menu.add(menuSpace3);
+            menu.add(menuSpace4);
+            menu.add(menuSpace5);
+            menu.add(menuSpace6);
+            menu.add(botao2);
+        }else if(mode == 3){
+            menu.add(botao);
+            menu.add(botao1);
+            menu.add(menuSpace);
+            menu.add(botao4);
+            menu.add(menuSpace2);
+            menu.add(menuSpace3);
+            menu.add(menuSpace4);
+            menu.add(menuSpace5);
+            menu.add(menuSpace6);
+            menu.add(botao2);
+        }else if(mode == 4){
+            menu.add(botao);
+            menu.add(usersPage);
+            menu.add(menuSpace);
+            menu.add(menuSpace1);
+            menu.add(menuSpace2);
+            menu.add(menuSpace3);
+            menu.add(menuSpace4);
+            menu.add(menuSpace5);
+            menu.add(menuSpace6);
+            menu.add(botao2);
+        }
+
+        return menu;
+    }
+
     public void setContentPane(Container contentPane){
         currentContainer = contentPane;
         super.setContentPane(contentPane);

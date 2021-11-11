@@ -22,7 +22,7 @@ public class View extends BaseView{
     JFrame frameRegisterBed;
     public View() {
         super("Vulcano");
-        super.showWindow(projectsContainer(), 620,520);
+        super.showWindow(loginContainer(), 620,520);
     }
 
     private Container loginContainer() {
@@ -127,13 +127,9 @@ public class View extends BaseView{
                 try {
                     /*---------------------efetua login---------------------*/
                     //login(userInput.getText(), passInput.getText());
-                    String user = userInput.getText();
-                    String password = passInput.getText();
-                    System.out.println("Sucesso");
-                    
-                    /*---------------------troca a tela---------------------*/
-                    //loginContainer.setVisible(false);
-                    //setContentPane(menuContainer(institution));
+        
+                    loginContainer.setVisible(false);
+                    setContentPane(projectsContainer());
                 } catch (Exception ex) {
                     if(userInput.getText().equals("") || passInput.getText().equals("")){
                         JOptionPane.showMessageDialog(loginContainer,"Seu usuário ou senha está vazio", "WARNING",JOptionPane.WARNING_MESSAGE);
@@ -158,62 +154,76 @@ public class View extends BaseView{
         JPanel projectsContainer = new JPanel();
         projectsContainer.setLayout(null);
 
+        /*---------------configurando menu---------------*/
+        JButton projectsBtn = new JButton();
+        JButton usersBtn = new JButton();
+        JButton exitBtn = new JButton();
+        JButton itemsBtn = new JButton();
+        JButton backBtn = new JButton();
 
-        /*------------------------menu-------------------------*/
-        JPanel menu = new JPanel();
-        menu.setLayout(new GridLayout(10,1));
-        menu.setBounds(0,0,100,482);
-        JButton botao = new JButton();
-        botao.setText("projetos");
-        JButton botao1 = new JButton();
-        botao1.setText("usuarios");
-        JButton botao2 = new JButton();
-        botao2.setText("logOut");
-        JPanel menuSpace = new JPanel();
-        menuSpace.setLayout(null);
-        JPanel menuSpace1 = new JPanel();
-        menuSpace1.setLayout(null);
-        JPanel menuSpace2 = new JPanel();
-        menuSpace2.setLayout(null);
-        JPanel menuSpace3 = new JPanel();
-        menuSpace3.setLayout(null);
-        JPanel menuSpace4 = new JPanel();
-        menuSpace4.setLayout(null);
-        JPanel menuSpace5 = new JPanel();
-        menuSpace5.setLayout(null);
-        JPanel menuSpace6 = new JPanel();
-        menuSpace6.setLayout(null);
+        JPanel menu = menuCreate(100,482,1,projectsBtn,usersBtn,exitBtn,itemsBtn,backBtn);
 
+        usersBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                projectsContainer.setVisible(false);
+                setContentPane(usersContainer());
+            }
+        });
 
-
-        menu.add(botao);
-        menu.add(botao1);
-        menu.add(menuSpace);
-        menu.add(menuSpace1);
-        menu.add(menuSpace2);
-        menu.add(menuSpace3);
-        menu.add(menuSpace4);
-        menu.add(menuSpace5);
-        menu.add(menuSpace6);
-        menu.add(botao2);
-
-        JTextField userInput = super.createTextField(219, 180, 200, 20);
-        JPasswordField passInput = super.createPasswordField(219, 206, 200, 20);
-        JButton registerButton = super.createButton("Crie uma", 340, 400, 81, 20);
-        JButton loginButton = super.createButton("Entrar", 219, 232, 200, 20);
-        projectsContainer.add(super.createInputLabel("Usuário:", 155, 180, 60, 20));
-        projectsContainer.add(super.createInputLabel("Senha:", 155, 206, 60, 20));
-        projectsContainer.add(super.createTextLabel("Não tem uma conta?", 219, 400, 120, 20));
-
-
-        projectsContainer.add(userInput);
-        projectsContainer.add(passInput);
-        projectsContainer.add(loginButton);
-        projectsContainer.add(registerButton);
+        exitBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                projectsContainer.setVisible(false);
+                setContentPane(loginContainer());
+            }
+        });
+        /*---------------menu configurado---------------*/
+       
         projectsContainer.add(menu);
         projectsContainer.setVisible(true);
 
+        
+
         return projectsContainer;
+    }
+
+    private Container usersContainer() {
+
+        JPanel usersContainer = new JPanel();
+        usersContainer.setLayout(null);
+
+
+        /*---------------configurando menu---------------*/
+        JButton projectsBtn = new JButton();
+        JButton usersBtn = new JButton();
+        JButton exitBtn = new JButton();
+        JButton itemsBtn = new JButton();
+        JButton backBtn = new JButton();
+
+        JPanel menu = menuCreate(100,482,4,projectsBtn,usersBtn,exitBtn,itemsBtn,backBtn);
+
+        projectsBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                usersContainer.setVisible(false);
+                setContentPane(projectsContainer());
+            }
+        });
+
+        exitBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                usersContainer.setVisible(false);
+                setContentPane(loginContainer());
+            }
+        });
+        /*---------------menu configurado---------------*/
+
+        usersContainer.add(menu);
+        usersContainer.setVisible(true);
+
+        return usersContainer;
     }
     
 }
