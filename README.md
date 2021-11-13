@@ -19,5 +19,8 @@ Vulcano is a project management system focused on software engineering practices
 ## Authors
 
 * **Arthur M P Camargo** - (https://github.com/arthurmpc)
+* **Tamara Nubia** - (https://github.com/nubianune5)
+* **Victor M Oliveira** - (https://github.com/vimigueloli)
 * **Wallace M M Pontes** - (https://github.com/Wallacemmp)
+
 
