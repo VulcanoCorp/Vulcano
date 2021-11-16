@@ -179,14 +179,197 @@ public class View extends BaseView{
             }
         });
         /*---------------menu configurado---------------*/
+        /*-----------------adicione seu codigo abaixo--------------------*/
+
+
+
+
+        /*-----------------adicione seu codigo acima--------------------*/
        
         projectsContainer.add(menu);
         projectsContainer.setVisible(true);
 
-        
-
         return projectsContainer;
     }
+
+    private Container projectContainer(int id) {
+
+        JPanel projectContainer = new JPanel();
+        projectContainer.setLayout(null);
+
+        /*---------------configurando menu---------------*/
+        JButton projectsBtn = new JButton();
+        JButton usersBtn = new JButton();
+        JButton exitBtn = new JButton();
+        JButton itemsBtn = new JButton();
+        JButton backBtn = new JButton();
+
+        JPanel menu = menuCreate(100,482,2,projectsBtn,usersBtn,exitBtn,itemsBtn,backBtn);
+
+        itemsBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                projectContainer.setVisible(false);
+                setContentPane(requirementsContainer(id));
+            }
+        });
+
+        projectsBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                projectContainer.setVisible(false);
+                setContentPane(projectsContainer());
+            }
+        });
+
+        usersBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                projectContainer.setVisible(false);
+                setContentPane(usersContainer());
+            }
+        });
+
+        exitBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                projectContainer.setVisible(false);
+                setContentPane(loginContainer());
+            }
+        });
+        /*---------------menu configurado---------------*/
+        /*-----------------adicione seu codigo abaixo--------------------*/
+
+
+
+
+        /*-----------------adicione seu codigo acima--------------------*/
+       
+        projectContainer.add(menu);
+        projectContainer.setVisible(true);
+
+        return projectContainer;
+    }
+
+    private Container requirementsContainer(int id) {
+
+        JPanel requirementsContainer = new JPanel();
+        requirementsContainer.setLayout(null);
+
+        /*---------------configurando menu---------------*/
+        JButton projectsBtn = new JButton();
+        JButton usersBtn = new JButton();
+        JButton exitBtn = new JButton();
+        JButton itemsBtn = new JButton();
+        JButton backBtn = new JButton();
+
+        JPanel menu = menuCreate(100,482,3,projectsBtn,usersBtn,exitBtn,itemsBtn,backBtn);
+
+        backBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                requirementsContainer.setVisible(false);
+                setContentPane(projectContainer(id));
+            }
+        });
+
+        projectsBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                requirementsContainer.setVisible(false);
+                setContentPane(projectsContainer());
+            }
+        });
+
+        usersBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                requirementsContainer.setVisible(false);
+                setContentPane(usersContainer());
+            }
+        });
+
+        exitBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                requirementsContainer.setVisible(false);
+                setContentPane(loginContainer());
+            }
+        });
+        /*---------------menu configurado---------------*/
+        /*-----------------adicione seu codigo abaixo--------------------*/
+
+
+
+
+        /*-----------------adicione seu codigo acima--------------------*/
+
+        requirementsContainer.add(menu);
+        requirementsContainer.setVisible(true);
+
+        return requirementsContainer;
+    }
+
+    private Container requirementContainer(int projectId, int requirementId ) {
+
+        JPanel requirementContainer = new JPanel();
+        requirementContainer.setLayout(null);
+
+        /*---------------configurando menu---------------*/
+        JButton projectsBtn = new JButton();
+        JButton usersBtn = new JButton();
+        JButton exitBtn = new JButton();
+        JButton itemsBtn = new JButton();
+        JButton backBtn = new JButton();
+
+        JPanel menu = menuCreate(100,482,2,projectsBtn,usersBtn,exitBtn,itemsBtn,backBtn);
+
+        itemsBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                requirementContainer.setVisible(false);
+                setContentPane(requirementsContainer(projectId));
+            }
+        });
+
+        projectsBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                requirementContainer.setVisible(false);
+                setContentPane(projectsContainer());
+            }
+        });
+
+        usersBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                requirementContainer.setVisible(false);
+                setContentPane(usersContainer());
+            }
+        });
+
+        exitBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                requirementContainer.setVisible(false);
+                setContentPane(loginContainer());
+            }
+        });
+        /*---------------menu configurado---------------*/
+        /*-----------------adicione seu codigo abaixo--------------------*/
+
+
+
+
+        /*-----------------adicione seu codigo acima--------------------*/
+       
+        requirementContainer.add(menu);
+        requirementContainer.setVisible(true);
+
+        return requirementContainer;
+    }
+
+   
 
     private Container usersContainer() {
 
@@ -219,6 +402,12 @@ public class View extends BaseView{
             }
         });
         /*---------------menu configurado---------------*/
+        /*-----------------adicione seu codigo abaixo--------------------*/
+
+
+
+
+        /*-----------------adicione seu codigo acima--------------------*/
 
         usersContainer.add(menu);
         usersContainer.setVisible(true);

@@ -38,8 +38,8 @@ public class BaseView extends JFrame {
         botao.setText("Projetos");
         botao1.setText("Usuarios");
         botao2.setText("Sair");
-        botao2.setText("Requisitos");
-        botao2.setText("voltar");
+        botao3.setText("Requisitos");
+        botao4.setText("voltar");
         JPanel menuSpace = new JPanel();
         menuSpace.setLayout(null);
         JPanel menuSpace1 = new JPanel();
