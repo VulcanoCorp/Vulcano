@@ -173,13 +173,78 @@ public class View extends BaseView{
         });
         /*---------------menu configurado---------------*/
         /*-----------------adicione seu codigo abaixo--------------------*/
+        Object[][] data = {
+            {1,"projetoA","um projeto", "eu"},
+            {2,"projetoB","um projeto", "eu"},
+            {3,"projetoC","um projeto", "eu"},
+            {4,"projetoD","um projeto", "eu"},
+            {5,"projetoE","um projeto", "eu"},
+            {6,"projetoF","um projeto", "eu"},
+        };
 
+        JTextField searchInput = super.createTextField(150,20,400,30);
+        JButton searchButton = super.createButton("Pesquisar",450 ,60 , 100, 30);
 
+        //Define o formato/funcionamento da tabela
+        TableModel model = new DefaultTableModel(data, new String[] {"id","nome","descrição","autor"}){
+            public Class getColumnClass(int column) {
 
+                Class returnValue;
+
+                if ((column >= 0) && (column < getColumnCount())) {
+                    returnValue = getValueAt(0, column).getClass();
+                } else {
+                    returnValue = Object.class;
+                }
+                return returnValue;
+            }
+            @Override
+            public boolean isCellEditable(final int row, final int column) {
+                return false;
+            }
+        };
+
+        JTable table = new JTable(model);
+        final TableRowSorter<TableModel> orderer = new TableRowSorter<>(model);
+        table.setRowSorter(orderer);
+
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                JTable table = (JTable) e.getSource();
+                if (e.getClickCount() == 2 && table.getSelectedRow() != -1) {
+                    projectsContainer.setVisible(false);
+                    int requisitionID = (int)table.getValueAt(table.getSelectedRow(),0);
+                    setContentPane(projectContainer(requisitionID));
+                }
+            }
+        });
+
+        searchButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                String text = searchInput.getText();
+
+                try {
+                    if (text.length() == 0) {
+                        orderer.setRowFilter(null);
+                    } else if (text.length() != 0) {
+                        orderer.setRowFilter(RowFilter.regexFilter(text));
+                    }
+                }catch (PatternSyntaxException pse) {
+                    System.err.println("Erro");
+                }
+            }
+        });
 
         /*-----------------adicione seu codigo acima--------------------*/
        
+        JScrollPane pane = new JScrollPane(table);
+        pane.setBounds(150,100,400,300);
         projectsContainer.add(menu);
+        projectsContainer.add(searchInput);
+        projectsContainer.add(searchButton);
+        projectsContainer.add(pane);
         projectsContainer.setVisible(true);
 
         return projectsContainer;
