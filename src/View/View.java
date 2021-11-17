@@ -1,12 +1,5 @@
 package View;
 
-/*import Habbib.controller.BedController;
-import Habbib.controller.InstitutionController;
-import Habbib.controller.RequisitionController;
-import Habbib.controller.SessionController;
-import Habbib.dao.PatientDAO;
-import Habbib.model.*;*/
-
 import java.sql.Date;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
