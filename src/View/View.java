@@ -2,6 +2,7 @@ package View;
 
 import java.sql.Date;
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
@@ -297,13 +298,61 @@ public class View extends BaseView{
         });
         /*---------------menu configurado---------------*/
         /*-----------------adicione seu codigo abaixo--------------------*/
+        JButton cancelButton = super.createButton("cancelar", 375, 420, 95, 30);
+        JButton confirmationButton = super.createButton("concluir", 475, 420, 95, 30);
+
+        JLabel nameLabel = new JLabel("Nome do Projeto");
+        JTextField nameInput = new JTextField();
+        JLabel descriptionLabel = new JLabel("Descrição");
+        
+        JTextArea descriptionInput = createJTextArea(150, 165, 400, 100);
+        descriptionInput.setEditable(true);
+        descriptionInput.setLineWrap(true);
+
+        Border border = BorderFactory.createLineBorder(Color.BLACK);
+        descriptionInput.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(10, 10, 10, 10)));
+        nameInput.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(10, 10, 10, 10)));
+
+        /*JScrollPane scrollDescription = new JScrollPane(descriptionInput);
+        scrollDescription.setBounds(150, 165, 400, 100);
+        scrollDescription.add(descriptionInput);
+        scrollDescription.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);*/
 
 
+        JPanel form = new JPanel();
+        form.setLayout(new GridLayout(3,1));
+        form.setBounds(150,50,400,110);
+
+        form.add(nameLabel);
+        form.add(nameInput);
+        form.add(descriptionLabel);
+
+        confirmationButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String name = nameInput.getText();
+                String description = descriptionInput.getText();
+                //envia para o banco
+                //abre janela de finalização
+            }
+        });
+
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                projectContainer.setVisible(false);
+                setContentPane(projectsContainer());
+            }
+        });
 
 
         /*-----------------adicione seu codigo acima--------------------*/
        
         projectContainer.add(menu);
+        projectContainer.add(form);
+        projectContainer.add(descriptionInput);
+        projectContainer.add(cancelButton);
+        projectContainer.add(confirmationButton);
         projectContainer.setVisible(true);
 
         return projectContainer;
@@ -483,13 +532,115 @@ public class View extends BaseView{
         });
         /*---------------menu configurado---------------*/
         /*-----------------adicione seu codigo abaixo--------------------*/
+        JButton cancelButton = super.createButton("cancelar", 375, 420, 95, 30);
+        JButton confirmationButton = super.createButton("concluir", 475, 420, 95, 30);
 
+        JLabel nameLabel = new JLabel("Nome do requisito");
+        JTextField nameInput = new JTextField();
+        JLabel modelLabel = new JLabel("Modelo");
+        JTextField modelInput = new JTextField();
+        JLabel hoursLabel = new JLabel("Horas estimadas");
+        JTextField hoursInput = new JTextField();
+
+        String[] PLevel = {"Selecionar","Baixa","Média","Alta","Critico"};
+        String[] states = {"Selecionar","Backlog","To Do","In progress","Done"};
+
+        JLabel priorityLabel  = new JLabel("Prioridade");
+        JComboBox priorityLevel = new JComboBox();
+        priorityLevel.setModel(new DefaultComboBoxModel<>(PLevel));
+
+        JLabel complexityLabel  = new JLabel("Complexidade");
+        JComboBox complexityLevel = new JComboBox();
+        complexityLevel.setModel(new DefaultComboBoxModel<>(PLevel));
+
+        JLabel stateLabel  = new JLabel("Estado do projeto");
+        JComboBox stateLevel = new JComboBox();
+        stateLevel.setModel(new DefaultComboBoxModel<>(states));
+
+        Border border = BorderFactory.createLineBorder(Color.BLACK);
+        nameInput.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(10, 10, 10, 10)));
+        modelInput.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(10, 10, 10, 10)));
+        hoursInput.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(10, 10, 10, 10)));
+        
+        JLabel featureLabel = createTextLabel("Features", 150, 210, 400, 30);
+        JTextArea featureInput = createJTextArea(150, 245, 400, 50);
+        featureInput.setEditable(true);
+        featureInput.setLineWrap(true);
+
+        JLabel descriptionLabel = createTextLabel("Descrição", 150, 300, 400, 30);
+        JTextArea descriptionInput = createJTextArea(150, 335, 400, 50);
+        descriptionInput.setEditable(true);
+        descriptionInput.setLineWrap(true);
+        
+        /*JScrollPane scrollDescription = new JScrollPane(descriptionInput);
+        scrollDescription.setBounds(150, 165, 400, 100);
+        scrollDescription.add(descriptionInput);
+        scrollDescription.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);*/
+
+
+        JPanel form = new JPanel();
+        form.setLayout(new GridLayout(6,2));
+        form.setBounds(175,15,350,200);
+
+        form.add(nameLabel);
+        form.add(nameInput);
+        form.add(modelLabel);
+        form.add(modelInput);
+        form.add(hoursLabel);
+        form.add(hoursInput);
+        form.add(priorityLabel);
+        form.add(priorityLevel);
+        form.add(complexityLabel);
+        form.add(complexityLevel);
+        form.add(stateLabel);
+        form.add(stateLevel);
+
+        confirmationButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String name = nameInput.getText();
+                String model = modelInput.getText();
+                String hours = hoursInput.getText();
+                String description = descriptionInput.getText();
+                String feature = featureInput.getText();
+                String complexity = complexityLevel.getSelectedItem().toString();
+                String priority = priorityLevel.getSelectedItem().toString();
+                String state = stateLevel.getSelectedItem().toString();
+
+                if(complexityLevel.getSelectedItem().equals("Selecionar") || priorityLevel.getSelectedItem().equals("Selecionar") || stateLevel.getSelectedItem().equals("Selecionar")){
+                    JOptionPane.showMessageDialog(null, "Dados inválidos, verifique se os campos estão preenchidos corretamente", "WARNING", JOptionPane.WARNING_MESSAGE);
+                }else{
+                    try{
+                        //envia para o banco
+                        //abre janela de finalização
+                    }catch(Exception error){
+
+                    }
+                }
+                
+            }
+        });
+
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                requirementContainer.setVisible(false);
+                setContentPane(requirementsContainer(projectId));
+            }
+        });
 
 
 
         /*-----------------adicione seu codigo acima--------------------*/
        
         requirementContainer.add(menu);
+        requirementContainer.add(form);
+        requirementContainer.add(featureLabel);
+        requirementContainer.add(featureInput);
+        requirementContainer.add(descriptionLabel);
+        requirementContainer.add(descriptionInput);
+        requirementContainer.add(confirmationButton);
+        requirementContainer.add(cancelButton);
         requirementContainer.setVisible(true);
 
         return requirementContainer;
