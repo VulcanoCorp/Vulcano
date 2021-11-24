@@ -12,6 +12,7 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.regex.PatternSyntaxException;
 
+
 public class View extends BaseView{
     JFrame frameRegisterBed;
     public View() {
@@ -43,9 +44,16 @@ public class View extends BaseView{
         JLabel passLabel = new JLabel("Senha:");
         JButton loginButton = new JButton("Entrar");
         JPanel space = new JPanel();
+        JPanel space1 = new JPanel();
+        JPanel container = new JPanel(new GridLayout(1,2));
+        JLabel registerLabel = new JLabel("Não tem conta?");
+        JButton registerButton = new JButton("Criar uma!");
+        container.add(registerLabel);
+        container.add(registerButton);
+
 
         JPanel form = new JPanel();
-        form.setLayout(new GridLayout(6,1));
+        form.setLayout(new GridLayout(8,1));
         form.setBounds(100,100,400,200);
 
         Border border = BorderFactory.createLineBorder(Color.BLACK);
@@ -58,6 +66,9 @@ public class View extends BaseView{
         form.add(passInput);
         form.add(space);
         form.add(loginButton);
+        form.add(space1);
+        form.add(container);
+
 
         passInput.addKeyListener(new KeyListener() {
             @Override
@@ -68,17 +79,16 @@ public class View extends BaseView{
                         //login(userInput.getText(), passInput.getText());
                         String user = userInput.getText();
                         String password = passInput.getText();
-                        System.out.println("Sucesso");
-                        
-                        /*---------------------troca a tela---------------------*/
-                        //loginContainer.setVisible(false);
-                        //setContentPane(menuContainer(institution));
-                    } catch (Exception ex) {
-                        if(userInput.getText().equals("") || passInput.getText().equals("")){
+                        if(user.equals("") || password.equals("")){
                             JOptionPane.showMessageDialog(loginContainer,"Seu usuário ou senha está vazio", "WARNING",JOptionPane.WARNING_MESSAGE);
-                        } else{
-                            JOptionPane.showMessageDialog(loginContainer,"Seu usuário ou senha está incorreto.", "WARNING",JOptionPane.WARNING_MESSAGE);
+                        }else{
+                            /*---------------------troca a tela---------------------*/
+                            loginContainer.setVisible(false);
+                            //fazer o login
+                            setContentPane(projectsContainer(1));
                         }
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(loginContainer,"Seu usuário ou senha está incorreto.", "ERRO",JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }
@@ -98,17 +108,17 @@ public class View extends BaseView{
                         //login(userInput.getText(), passInput.getText());
                         String user = userInput.getText();
                         String password = passInput.getText();
-                        System.out.println("Sucesso");
-                        
-                        /*---------------------troca a tela---------------------*/
-                        //loginContainer.setVisible(false);
-                        //setContentPane(menuContainer(institution));
-                    } catch (Exception ex) {
-                        if(userInput.getText().equals("") || passInput.getText().equals("")){
+                        if(user.equals("") || password.equals("")){
                             JOptionPane.showMessageDialog(loginContainer,"Seu usuário ou senha está vazio", "WARNING",JOptionPane.WARNING_MESSAGE);
-                        } else{
-                            JOptionPane.showMessageDialog(loginContainer,"Seu usuário ou senha está incorreto.", "WARNING",JOptionPane.WARNING_MESSAGE);
+                        }else{
+                            /*---------------------troca a tela---------------------*/
+                            loginContainer.setVisible(false);
+                            //fazer o login
+                            setContentPane(projectsContainer(1));
                         }
+                    
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(loginContainer,"Seu usuário ou senha está incorreto.", "WARNING",JOptionPane.WARNING_MESSAGE);
                     }
                 }
             }
@@ -127,17 +137,27 @@ public class View extends BaseView{
                 try {
                     /*---------------------efetua login---------------------*/
                     //login(userInput.getText(), passInput.getText());
-        
-                    loginContainer.setVisible(false);
-                    //trocar valor sendo passado na função abaixo
-                    setContentPane(projectsContainer(1));
-                } catch (Exception ex) {
-                    if(userInput.getText().equals("") || passInput.getText().equals("")){
+                    String user = userInput.getText();
+                    String password = passInput.getText();
+                    if(user.equals("") || password.equals("")){
                         JOptionPane.showMessageDialog(loginContainer,"Seu usuário ou senha está vazio", "WARNING",JOptionPane.WARNING_MESSAGE);
-                    } else{
-                        JOptionPane.showMessageDialog(loginContainer,"Seu usuário ou senha está incorreto.", "WARNING",JOptionPane.WARNING_MESSAGE);
+                    }else{
+                        /*---------------------troca a tela---------------------*/
+                        loginContainer.setVisible(false);
+                        //fazer o login
+                        setContentPane(projectsContainer(1));
                     }
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(loginContainer,"Seu usuário ou senha está incorreto.", "ERRO",JOptionPane.ERROR_MESSAGE);
                 }
+            }
+        });
+
+        registerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                    loginContainer.setVisible(false);
+                    setContentPane(userContainer(-1,-1));
             }
         });
 
@@ -157,16 +177,19 @@ public class View extends BaseView{
         JButton projectsBtn = new JButton();
         JButton usersBtn = new JButton();
         JButton exitBtn = new JButton();
-        JButton itemsBtn = new JButton();
-        JButton backBtn = new JButton();
 
-        JPanel menu = menuCreate(100,482,1,projectsBtn,usersBtn,exitBtn,itemsBtn,backBtn);
+        JPanel menu = menuCreate(100,482,1,projectsBtn,usersBtn,exitBtn);
 
         usersBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 projectsContainer.setVisible(false);
-                setContentPane(usersContainer(userId));
+   
+                if(userId != 1){
+                    setContentPane(userContainer(userId, userId));
+                }else{
+                    setContentPane(usersContainer(userId));
+                }           
             }
         });
 
@@ -281,32 +304,20 @@ public class View extends BaseView{
         JButton projectsBtn = new JButton();
         JButton usersBtn = new JButton();
         JButton exitBtn = new JButton();
-        JButton itemsBtn = new JButton();
-        JButton backBtn = new JButton();
 
-        JPanel menu = menuCreate(100,482,2,projectsBtn,usersBtn,exitBtn,itemsBtn,backBtn);
-
-        itemsBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                projectContainer.setVisible(false);
-                setContentPane(requirementsContainer(id, userId));
-            }
-        });
-
-        projectsBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                projectContainer.setVisible(false);
-                setContentPane(projectsContainer(userId));
-            }
-        });
+        JPanel menu = menuCreate(100,482,1,projectsBtn,usersBtn,exitBtn);
 
         usersBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 projectContainer.setVisible(false);
-                setContentPane(usersContainer(userId));
+    
+                if(userId != 1){
+                    setContentPane(userContainer(userId, userId));
+                }else{
+                    setContentPane(usersContainer(userId));
+                }  
+                 
             }
         });
 
@@ -319,8 +330,10 @@ public class View extends BaseView{
         });
         /*---------------menu configurado---------------*/
         /*-----------------adicione seu codigo abaixo--------------------*/
-        JButton cancelButton = super.createButton("cancelar", 375, 420, 95, 30);
-        JButton confirmationButton = super.createButton("concluir", 475, 420, 95, 30);
+        JButton requirementsButton = super.createButton("Requisitos", 150, 420, 95, 30);
+        JButton deleteButton = super.createButton("Deletar", 250, 420, 95, 30);
+        JButton cancelButton = super.createButton("Cancelar", 375, 420, 95, 30);
+        JButton confirmationButton = super.createButton("Concluir", 475, 420, 95, 30);
 
         JLabel nameLabel = new JLabel("Nome do Projeto");
         JTextField nameInput = new JTextField();
@@ -329,9 +342,13 @@ public class View extends BaseView{
         JTextArea descriptionInput = createJTextArea(150, 165, 400, 100);
         descriptionInput.setEditable(true);
         descriptionInput.setLineWrap(true);
+        descriptionInput.setText(" ");
+
+        JScrollPane scrollDescription = new JScrollPane(descriptionInput);
+        scrollDescription.setBounds(150, 165, 400, 100);
+        scrollDescription.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
         Border border = BorderFactory.createLineBorder(Color.BLACK);
-        descriptionInput.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(10, 10, 10, 10)));
         nameInput.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(10, 10, 10, 10)));
 
         /*JScrollPane scrollDescription = new JScrollPane(descriptionInput);
@@ -353,8 +370,29 @@ public class View extends BaseView{
             public void actionPerformed(ActionEvent e) {
                 String name = nameInput.getText();
                 String description = descriptionInput.getText();
-                //envia para o banco
-                //abre janela de finalização
+
+                if(name.equals("") || description.equals("")){
+                    JOptionPane.showMessageDialog(null, "Por favor preencha todos os campos", "WARNING", JOptionPane.WARNING_MESSAGE);
+                }else{
+                    try{
+                        //envia para o banco
+                        projectContainer.setVisible(false);
+                        setContentPane(projectsContainer(userId));
+                        JOptionPane.showMessageDialog(null,"Projeto criado com sucesso", "Sucesso",JOptionPane.INFORMATION_MESSAGE);
+                    }catch(Exception error){
+                        JOptionPane.showMessageDialog(null,"Falha na conexão tente novamente mais tarde","ERRO",JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+                
+                
+            }
+        });
+
+        requirementsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                projectContainer.setVisible(false);
+                setContentPane(requirementsContainer(id, userId));
             }
         });
 
@@ -366,14 +404,34 @@ public class View extends BaseView{
             }
         });
 
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try{
+                    //delta o projeto
+                    projectContainer.setVisible(false);
+                    setContentPane(projectsContainer(userId));
+                    JOptionPane.showMessageDialog(null,"Projeto deletado com sucesso", "Sucesso",JOptionPane.INFORMATION_MESSAGE);
+                }catch(Exception error){
+                    JOptionPane.showMessageDialog(null,"Falha na conexão tente novamente mais tarde","ERRO",JOptionPane.ERROR_MESSAGE);
+                }
+                
+            }
+        });
+
 
         /*-----------------adicione seu codigo acima--------------------*/
        
         projectContainer.add(menu);
         projectContainer.add(form);
-        projectContainer.add(descriptionInput);
+        projectContainer.add(scrollDescription);
         projectContainer.add(cancelButton);
         projectContainer.add(confirmationButton);
+        if(id != -1){
+            projectContainer.add(requirementsButton);
+            projectContainer.add(deleteButton);
+        }
+        
         projectContainer.setVisible(true);
 
         return projectContainer;
@@ -388,32 +446,20 @@ public class View extends BaseView{
         JButton projectsBtn = new JButton();
         JButton usersBtn = new JButton();
         JButton exitBtn = new JButton();
-        JButton itemsBtn = new JButton();
-        JButton backBtn = new JButton();
 
-        JPanel menu = menuCreate(100,482,3,projectsBtn,usersBtn,exitBtn,itemsBtn,backBtn);
-
-        backBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                requirementsContainer.setVisible(false);
-                setContentPane(projectContainer(id, userId));
-            }
-        });
-
-        projectsBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                requirementsContainer.setVisible(false);
-                setContentPane(projectsContainer(userId));
-            }
-        });
+        JPanel menu = menuCreate(100,482,1,projectsBtn,usersBtn,exitBtn);
 
         usersBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 requirementsContainer.setVisible(false);
-                setContentPane(usersContainer(userId));
+
+                if(userId != 1){
+                    setContentPane(userContainer(userId, userId));
+                }else{
+                    setContentPane(usersContainer(userId));
+                }
+                
             }
         });
 
@@ -461,6 +507,8 @@ public class View extends BaseView{
         final TableRowSorter<TableModel> orderer = new TableRowSorter<>(model);
         table.setRowSorter(orderer);
 
+        JButton backButton = super.createButton("Voltar", 150, 420, 100, 30);
+
         JButton addButton = super.createButton("Adicionar", 450, 420, 100, 30);
 
         table.addMouseListener(new MouseAdapter() {
@@ -480,6 +528,14 @@ public class View extends BaseView{
             public void actionPerformed(ActionEvent e) {
                 requirementsContainer.setVisible(false);
                 setContentPane(requirementContainer(id,-1,userId));
+            }
+        });
+
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                requirementsContainer.setVisible(false);
+                setContentPane(projectContainer(id, userId));
             }
         });
 
@@ -517,6 +573,7 @@ public class View extends BaseView{
         requirementsContainer.add(searchButton);
         requirementsContainer.add(pane);
         requirementsContainer.add(addButton);
+        requirementsContainer.add(backButton);
         requirementsContainer.setVisible(true);
 
         return requirementsContainer;
@@ -531,18 +588,8 @@ public class View extends BaseView{
         JButton projectsBtn = new JButton();
         JButton usersBtn = new JButton();
         JButton exitBtn = new JButton();
-        JButton itemsBtn = new JButton();
-        JButton backBtn = new JButton();
 
-        JPanel menu = menuCreate(100,482,2,projectsBtn,usersBtn,exitBtn,itemsBtn,backBtn);
-
-        itemsBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                requirementContainer.setVisible(false);
-                setContentPane(requirementsContainer(projectId, userId));
-            }
-        });
+        JPanel menu = menuCreate(100,482,1,projectsBtn,usersBtn,exitBtn);
 
         projectsBtn.addActionListener(new ActionListener() {
             @Override
@@ -556,7 +603,12 @@ public class View extends BaseView{
             @Override
             public void actionPerformed(ActionEvent e) {
                 requirementContainer.setVisible(false);
-                setContentPane(usersContainer(userId));
+
+                if(userId != 1){
+                    setContentPane(userContainer(userId, userId));
+                }else{
+                    setContentPane(usersContainer(userId));
+                }             
             }
         });
 
@@ -569,8 +621,13 @@ public class View extends BaseView{
         });
         /*---------------menu configurado---------------*/
         /*-----------------adicione seu codigo abaixo--------------------*/
-        JButton cancelButton = super.createButton("cancelar", 420, 430, 80, 30);
-        JButton confirmationButton = super.createButton("concluir", 502, 430, 80, 30);
+        JButton cancelButton = super.createButton("Cancelar", 420, 430, 80, 30);
+        JButton confirmationButton = super.createButton("Concluir", 502, 430, 80, 30);
+        JButton deleteButton = super.createButton("Deletar", 420, 398, 162, 30);
+
+        if(requirementId != -1){
+            confirmationButton.setText("Alterar");
+        }
 
         JLabel nameLabel = new JLabel("Nome do requisito");
         JTextField nameInput = new JTextField();
@@ -596,17 +653,6 @@ public class View extends BaseView{
         JComboBox stateLevel = new JComboBox();
         stateLevel.setModel(new DefaultComboBoxModel<>(states));
 
-        Border border = BorderFactory.createLineBorder(Color.BLACK);
-        nameInput.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(1, 5, 1, 1)));
-        modelInput.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(1, 5, 1, 1)));
-        hoursInput.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(1, 5, 1, 1)));
-        phaseInput.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(1, 5, 1, 1)));
-      
-        /*JScrollPane scrollDescription = new JScrollPane(descriptionInput);
-        scrollDescription.setBounds(150, 165, 400, 100);
-        scrollDescription.add(descriptionInput);
-        scrollDescription.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);*/
-
         JPanel form = new JPanel();
         form.setLayout(new GridLayout(7,2));
         form.setBounds(175,15,350,200);
@@ -630,11 +676,21 @@ public class View extends BaseView{
         JTextArea featureInput = createJTextArea(150, 245, 400, 50);
         featureInput.setEditable(true);
         featureInput.setLineWrap(true);
+        featureInput.setText(" ");
+
+        JScrollPane scrollFeature = new JScrollPane(featureInput);
+        scrollFeature.setBounds(150, 245, 400, 50);
+        scrollFeature.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
         JLabel descriptionLabel = createTextLabel("Descrição", 150, 300, 400, 30);
         JTextArea descriptionInput = createJTextArea(150, 335, 400, 50);
         descriptionInput.setEditable(true);
         descriptionInput.setLineWrap(true);
+        descriptionInput.setText(" ");
+
+        JScrollPane scrollDescription = new JScrollPane(descriptionInput);
+        scrollDescription.setBounds(150, 335, 400, 50);
+        scrollDescription.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
         JLabel labelChange = createTextLabel("Ultima alteração", 125, 400, 100, 30);
         JLabel changeAuthor = createTextLabel("Usuário", 125, 425, 100, 30);
@@ -645,6 +701,14 @@ public class View extends BaseView{
 
         JLabel versionLabel = createTextLabel("Versão", 325, 400, 100, 30);
         JTextField versionInput = createTextField(325, 430, 80, 30);
+
+        Border border = BorderFactory.createLineBorder(Color.BLACK);
+        nameInput.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(1, 5, 1, 1)));
+        modelInput.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(1, 5, 1, 1)));
+        hoursInput.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(1, 5, 1, 1)));
+        phaseInput.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(1, 5, 1, 1)));
+        versionInput.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(1, 5, 1, 1)));
+      
 
         confirmationButton.addActionListener(new ActionListener() {
             @Override
@@ -670,14 +734,29 @@ public class View extends BaseView{
                 }
 
                 //realiza as verificações e avisa caso o formulário esteja incorreto
-                if(name.equals("") || requiredAnswers == false || complexityLevel.getSelectedItem().equals("Selecionar") || priorityLevel.getSelectedItem().equals("Selecionar") || stateLevel.getSelectedItem().equals("Selecionar")){
+                if(name.equals("") || complexityLevel.getSelectedItem().equals("Selecionar") || priorityLevel.getSelectedItem().equals("Selecionar") || stateLevel.getSelectedItem().equals("Selecionar")){
                     JOptionPane.showMessageDialog(null, "Dados inválidos, verifique se os campos estão preenchidos corretamente", "WARNING", JOptionPane.WARNING_MESSAGE);
+                }else if(requiredAnswers == false){
+                    JOptionPane.showMessageDialog(null, "Porfavor insira um valor numérico no campo de horas estimadas", "WARNING", JOptionPane.WARNING_MESSAGE);
                 }else{
                     try{
-                        //envia para o banco
-                        //abre janela de finalização
-                    }catch(Exception error){
+                        
+                        if(requirementId == -1){
+                            //envia para o banco
+                            JOptionPane.showMessageDialog(null, "Requisito adicionado com sucesso!", "SUCESSO", JOptionPane.INFORMATION_MESSAGE);
+                            requirementContainer.setVisible(false);
+                            setContentPane(requirementsContainer(projectId,userId));
+                        }else{
+                            String versionName = versionInput.getText();
 
+                            //altera no banco
+                            JOptionPane.showMessageDialog(null, "Requisito alterado com sucesso!", "SUCESSO", JOptionPane.INFORMATION_MESSAGE);
+                            requirementContainer.setVisible(false);
+                            setContentPane(requirementsContainer(projectId,userId));
+                        }
+                        
+                    }catch(Exception error){
+                        JOptionPane.showMessageDialog(null, "Falha na conexão tente novamente mais tarde", "ERRO", JOptionPane.ERROR_MESSAGE);
                     }
                 }
                 
@@ -692,6 +771,21 @@ public class View extends BaseView{
             }
         });
 
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try{
+                    //delta o projeto
+                    JOptionPane.showMessageDialog(null,"Requisito deletado com sucesso", "Sucesso",JOptionPane.INFORMATION_MESSAGE);
+                    requirementContainer.setVisible(false);
+                    setContentPane(requirementsContainer(projectId,userId));
+                }catch(Exception error){
+                    JOptionPane.showMessageDialog(null,"Falha na conexão tente novamente mais tarde","ERRO",JOptionPane.ERROR_MESSAGE);
+                }
+                
+            }
+        });
+
 
 
         /*-----------------adicione seu codigo acima--------------------*/
@@ -699,9 +793,9 @@ public class View extends BaseView{
         requirementContainer.add(menu);
         requirementContainer.add(form);
         requirementContainer.add(featureLabel);
-        requirementContainer.add(featureInput);
+        requirementContainer.add(scrollFeature);
         requirementContainer.add(descriptionLabel);
-        requirementContainer.add(descriptionInput);
+        requirementContainer.add(scrollDescription);
 
         if(requirementId != -1){
             requirementContainer.add(labelChange);
@@ -711,6 +805,7 @@ public class View extends BaseView{
             requirementContainer.add(author);
             requirementContainer.add(versionLabel);
             requirementContainer.add(versionInput);
+            requirementContainer.add(deleteButton);
         }
         
         requirementContainer.add(confirmationButton);
@@ -732,10 +827,8 @@ public class View extends BaseView{
         JButton projectsBtn = new JButton();
         JButton usersBtn = new JButton();
         JButton exitBtn = new JButton();
-        JButton itemsBtn = new JButton();
-        JButton backBtn = new JButton();
 
-        JPanel menu = menuCreate(100,482,4,projectsBtn,usersBtn,exitBtn,itemsBtn,backBtn);
+        JPanel menu = menuCreate(100,482,4,projectsBtn,usersBtn,exitBtn);
 
         projectsBtn.addActionListener(new ActionListener() {
             @Override
@@ -854,10 +947,8 @@ public class View extends BaseView{
         JButton projectsBtn = new JButton();
         JButton usersBtn = new JButton();
         JButton exitBtn = new JButton();
-        JButton itemsBtn = new JButton();
-        JButton backBtn = new JButton();
 
-        JPanel menu = menuCreate(100,482,0,projectsBtn,usersBtn,exitBtn,itemsBtn,backBtn);
+        JPanel menu = menuCreate(100,482,4,projectsBtn,usersBtn,exitBtn);
 
         projectsBtn.addActionListener(new ActionListener() {
             @Override
@@ -871,7 +962,12 @@ public class View extends BaseView{
             @Override
             public void actionPerformed(ActionEvent e) {
                 userContainer.setVisible(false);
-                setContentPane(usersContainer(userId));
+       
+                if(userId != 1){
+                    setContentPane(userContainer(userId, userId));
+                }else{
+                    setContentPane(usersContainer(userId));
+                }       
             }
         });
 
@@ -884,23 +980,42 @@ public class View extends BaseView{
         });
         /*---------------menu configurado---------------*/
         /*-----------------adicione seu codigo abaixo--------------------*/
-        JButton cancelButton = super.createButton("cancelar", 375, 420, 95, 30);
-        JButton confirmationButton = super.createButton("concluir", 475, 420, 95, 30);
+        JButton cancelButton = super.createButton("Cancelar", 375, 420, 95, 30);
+        JButton confirmationButton = super.createButton("Concluir", 475, 420, 95, 30);
+        JButton deleteButton = super.createButton("Deletar", 150, 420, 95, 30);
+
+        if(id != -1){
+            confirmationButton.setText("Alterar");
+        }
         
         JLabel nameLabel = new JLabel("Nome completo");
         JTextField nameInput = new JTextField();
         JLabel userLabel = new JLabel("Nome do usuário");
         JTextField userInput = new JTextField();
-        JLabel emailLabel = new JLabel("email");
+        JLabel emailLabel = new JLabel("Email");
         JTextField emailInput = new JTextField();
-        JLabel phoneLabel = new JLabel("telefone");
+        JLabel phoneLabel = new JLabel("Telefone");
         JTextField phoneInput = new JTextField();
-        JLabel passwordLabel = new JLabel("password");
+        JLabel passwordLabel = new JLabel("Senha");
         JTextField passwordInput = new JPasswordField();
+        JLabel confirmationLabel = new JLabel("Confirmação de Senha");
+        JTextField confirmationInput = new JPasswordField();
 
         JPanel form = new JPanel();
         form.setLayout(new GridLayout(10,1));
-        form.setBounds(150,50,400,300);
+        if(id == -1 && userId == -1){
+            form.setBounds(75,75,450,300);
+        }else{
+            form.setBounds(150,75,400,300);
+        }
+        
+
+        if(userId != 1 && id != -1){
+            nameInput.setEditable(false);
+            userInput.setEditable(false);
+            emailInput.setEditable(false);
+            phoneInput.setEditable(false);
+        }
 
         Border border = BorderFactory.createLineBorder(Color.BLACK);
         nameInput.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(1, 5, 1, 1)));
@@ -908,6 +1023,7 @@ public class View extends BaseView{
         emailInput.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(1, 5, 1, 1)));
         phoneInput.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(1, 5, 1, 1)));
         passwordInput.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(1, 5, 1, 1)));
+        confirmationInput.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(1, 5, 1, 1)));
         
 
         form.add(nameLabel);
@@ -918,8 +1034,13 @@ public class View extends BaseView{
         form.add(emailInput);
         form.add(phoneLabel);
         form.add(phoneInput);
-        form.add(passwordLabel);
-        form.add(passwordInput);
+        if(id == -1){
+            form.add(passwordLabel);
+            form.add(passwordInput);
+            form.add(confirmationLabel);
+            form.add(confirmationInput);
+        }
+        
 
         confirmationButton.addActionListener(new ActionListener() {
             @Override
@@ -928,20 +1049,49 @@ public class View extends BaseView{
                 String user = userInput.getText();
                 String email = emailInput.getText();
                 String phone = phoneInput.getText();
-                String password = passwordInput.getText();
+                Boolean numbersOnPhone = true;
 
-                //realiza as verificações e avisa caso o formulário esteja incorreto
-                if(name.equals("") || phone.equals("phone") || password.equals("")){
-                    JOptionPane.showMessageDialog(null, "Dados inválidos, verifique se os campos estão preenchidos corretamente", "WARNING", JOptionPane.WARNING_MESSAGE);
+                try{
+                    int convert = Integer.parseInt(phone);
+                }catch(Exception error){
+                    numbersOnPhone = false;
+                }
+
+                if(id == -1){
+                    String password = passwordInput.getText();
+                    String confirmation = confirmationInput.getText();
+                    if(name.equals("") || phone.equals("") || password.equals("") || confirmation.equals("")){
+                        JOptionPane.showMessageDialog(null, "Dados inválidos, verifique se os campos estão preenchidos corretamente", "WARNING", JOptionPane.WARNING_MESSAGE);
+                    }else if(password.equals(confirmation) == false){
+                        JOptionPane.showMessageDialog(null, "As senhas inseridas não correspondem!", "WARNING", JOptionPane.WARNING_MESSAGE);
+                    }else if(numbersOnPhone == false){
+                        JOptionPane.showMessageDialog(null, "Por favor insira somente numeros no campo de telefone", "WARNING", JOptionPane.WARNING_MESSAGE);
+                    }else{
+                        try{
+                            //envia para o banco
+                            JOptionPane.showMessageDialog(null, "Cadastro Concluido", "SUCESSO", JOptionPane.INFORMATION_MESSAGE);
+                            userContainer.setVisible(false);
+                            setContentPane(loginContainer());
+                        }catch(Exception error){
+                            JOptionPane.showMessageDialog(null, "Falha na conexão tente novamente mais tarde", "ERRO", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
                 }else{
-                    try{
-                        //envia para o banco
-                        //abre janela de finalização
-                    }catch(Exception error){
-
+                    if(name.equals("") || phone.equals("")){
+                        JOptionPane.showMessageDialog(null, "Dados inválidos, verifique se os campos estão preenchidos corretamente", "WARNING", JOptionPane.WARNING_MESSAGE);
+                    }else if(numbersOnPhone == false){
+                        JOptionPane.showMessageDialog(null, "Por favor insira somente numeros no campo de telefone", "WARNING", JOptionPane.WARNING_MESSAGE);
+                    }else{
+                        try{
+                            //envia para o banco a alteração
+                            JOptionPane.showMessageDialog(null, "Alteração Concluida", "SUCESSO", JOptionPane.INFORMATION_MESSAGE);
+                            userContainer.setVisible(false);
+                            setContentPane(loginContainer());
+                        }catch(Exception error){
+                            JOptionPane.showMessageDialog(null, "Falha na conexão tente novamente mais tarde", "ERRO", JOptionPane.ERROR_MESSAGE);
+                        }
                     }
                 }
-                
             }
         });
 
@@ -949,17 +1099,43 @@ public class View extends BaseView{
             @Override
             public void actionPerformed(ActionEvent e) {
                 userContainer.setVisible(false);
-                setContentPane(usersContainer(userId));
+                if(id == -1 && userId == -1){
+                    setContentPane(loginContainer());
+                }else{
+                    setContentPane(usersContainer(userId));
+                }
+                
+            }
+        });
+
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try{
+                    //delta o usuário
+                    JOptionPane.showMessageDialog(null,"Usuário deletado com sucesso", "Sucesso",JOptionPane.INFORMATION_MESSAGE);
+                    userContainer.setVisible(false);
+                    setContentPane(usersContainer(userId));
+                }catch(Exception error){
+                    JOptionPane.showMessageDialog(null,"Falha na conexão tente novamente mais tarde","ERRO",JOptionPane.ERROR_MESSAGE);
+                }
+                
             }
         });
 
         /*-----------------adicione seu codigo acima--------------------*/
         
-        
-        userContainer.add(menu);
+        if(userId != -1){
+            userContainer.add(menu);
+        }
+        if(userId == 1 || id == -1){
+            userContainer.add(cancelButton);
+            userContainer.add(confirmationButton);
+        }
+        if(userId == 1){
+            userContainer.add(deleteButton);
+        }
         userContainer.add(form);
-        userContainer.add(cancelButton);
-        userContainer.add(confirmationButton);
         userContainer.setVisible(true);
 
         return userContainer;
