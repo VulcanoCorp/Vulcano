@@ -1,4 +1,6 @@
 import View.View;
+import DAO.UserDAO;
+import Model.User;
 
 public class Main {
 
