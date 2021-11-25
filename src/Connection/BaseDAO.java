@@ -6,9 +6,9 @@ import java.sql.*;
 
 public class BaseDAO implements Closeable {
 
-    private static final String URL = "";
-    private static final String USER = "";
-    private static final String PASSWORD = "";
+    private static final String URL = "jdbc:mysql://vulcano.cw8ps4zhk8op.sa-east-1.rds.amazonaws.com:3306/db_Vulcano?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT&useSSL=false";
+    private static final String USER = "admin";
+    private static final String PASSWORD = "Vu1c4n0c0FF3";
 
     protected Connection connection;
 
