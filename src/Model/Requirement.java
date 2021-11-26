@@ -3,9 +3,9 @@ package Model;
 import java.sql.Date;
 import java.time.LocalDateTime;
 
-public class Requirements {
+public class Requirement {
 
-    public Requirements() {}
+    public Requirement() {}
 
     private int id;
     private String name;
