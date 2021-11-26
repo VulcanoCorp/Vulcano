@@ -37,34 +37,59 @@ public class UserDAO extends BaseDAO {
             System.out.println(e.getMessage());
             throw e;
         }
-        return getUser(user.getId());
+        return user;
     }
 
-    public User getUser(int id) throws Exception{
+    public User getUserByName(User user) throws Exception{
         PreparedStatement stmt;
         ResultSet rs;
-        User user1 = null;
 
         try{
-            String select = "SELECT * FROM User WHERE id = ?";
+            String select = "SELECT * FROM User WHERE FirstName = ?";
             stmt = super.connection.prepareStatement(select);
-            stmt.setInt(1,id);
+            stmt.setString(1,user.getUserName());
             rs = stmt.executeQuery();
 
             if (rs.next()){
-                user1 = new User();
-                user1.setId(rs.getInt("Id"));
-                user1.setFirstName(rs.getString("FirstName"));
-                user1.setUserName(rs.getString("UserName"));
-                user1.setEmail(rs.getString("Email"));
-                user1.setPassword(rs.getString("Password"));
-                user1.setContactNumber(rs.getString("ContactNumber"));
+                user = new User();
+                user.setId(rs.getInt("Id"));
+                user.setFirstName(rs.getString("FirstName"));
+                user.setUserName(rs.getString("UserName"));
+                user.setEmail(rs.getString("Email"));
+                user.setPassword(rs.getString("Password"));
+                user.setContactNumber(rs.getString("ContactNumber"));
             }
         }catch (Exception e){
             System.out.println(e.getMessage());
             throw e;
         }
-        return user1;
+        return user;
+    }
+
+    public User getUserById(User user) throws Exception{
+        PreparedStatement stmt;
+        ResultSet rs;
+
+        try{
+            String select = "SELECT * FROM User WHERE id = ?";
+            stmt = super.connection.prepareStatement(select);
+            stmt.setInt(1,user.getId());
+            rs = stmt.executeQuery();
+
+            if (rs.next()){
+                user = new User();
+                user.setId(rs.getInt("Id"));
+                user.setFirstName(rs.getString("FirstName"));
+                user.setUserName(rs.getString("UserName"));
+                user.setEmail(rs.getString("Email"));
+                user.setPassword(rs.getString("Password"));
+                user.setContactNumber(rs.getString("ContactNumber"));
+            }
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            throw e;
+        }
+        return user;
     }
 
     public User updateUser(User user) throws Exception{
@@ -73,7 +98,7 @@ public class UserDAO extends BaseDAO {
 
         try {
             String update = "UPDATE User SET FirstName = ?, UserName = ?, Email = ?, Password = ?, ContactNumber = ?";
-            stmt = super.connection.prepareStatement(update);
+            stmt = super.connection.prepareStatement(update, Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1,user.getFirstName());
             stmt.setString(2,user.getUserName());
             stmt.setString(3,user.getEmail());
@@ -89,7 +114,7 @@ public class UserDAO extends BaseDAO {
             System.out.println(e.getMessage());
             throw e;
         }
-        return getUser(user.getId());
+        return getUserById(user);
     }
 
     public void deleteUser(User user) throws Exception {

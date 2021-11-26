@@ -7,7 +7,7 @@ public class Project {
     private int id;
     private String name;
     private String description;
-    private String owner;
+    private int owner;
 
     public int getId() {
         return id;
@@ -33,11 +33,11 @@ public class Project {
         this.description = description;
     }
 
-    public String getOwner() {
+    public int getOwner() {
         return owner;
     }
 
-    public void setOwner(String owner) {
+    public void setOwner(int owner) {
         this.owner = owner;
     }
 }

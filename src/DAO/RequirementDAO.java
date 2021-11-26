@@ -1,7 +1,7 @@
 package DAO;
 
 import Connection.BaseDAO;
-import Model.Requirements;
+import Model.Requirement;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -38,7 +38,7 @@ public class RequirementDAO extends BaseDAO{
         return dtf.format(input); 
     }
 
-    public Requirements createRequirement(Requirements requirement) throws Exception{
+    public Requirement createRequirement(Requirement requirement) throws Exception{
         PreparedStatement stmt;
         String moment = getMoment();
         ResultSet rs;        
@@ -77,10 +77,10 @@ public class RequirementDAO extends BaseDAO{
         return requirement;
     }
 
-    public Requirements getRequirementById(int id) throws Exception{
+    public Requirement getRequirementById(int id) throws Exception{
         PreparedStatement stmt;
         ResultSet rs;
-        Requirements requirement = null;
+        Requirement requirement = null;
 
         try{
             String select = "SELECT * FROM Requirements WHERE id = ?";
@@ -89,7 +89,7 @@ public class RequirementDAO extends BaseDAO{
             rs = stmt.executeQuery();
 
             if (rs.next()){
-                requirement = new Requirements();
+                requirement = new Requirement();
                 requirement.setId(rs.getInt("Id"));
                 requirement.setName(rs.getString("Name"));
                 requirement.setFeature(rs.getString("Feature"));
@@ -114,8 +114,9 @@ public class RequirementDAO extends BaseDAO{
         return requirement;
     }
 
-    public void updateRequirement(Requirements requirement) throws Exception{
+    public void updateRequirement(Requirement requirement) throws Exception{
         PreparedStatement stmt;
+        ResultSet rs;
         String moment = getMoment();
 
         try {
@@ -160,10 +161,10 @@ public class RequirementDAO extends BaseDAO{
         }
     }
 
-    public ArrayList<Requirements> getAllRequirements(int projectId) throws Exception {
+    public ArrayList<Requirement> getAllRequirementsFromProject(int projectId) throws Exception {
         PreparedStatement stmt;
         ResultSet rs;
-        ArrayList<Requirements> requirementList = new ArrayList<>();
+        ArrayList<Requirement> requirementList = new ArrayList<>();
         try{
             String select = "SELECT * FROM Requirements WHERE Project_id = ?";
             stmt = super.connection.prepareStatement(select);
@@ -171,7 +172,7 @@ public class RequirementDAO extends BaseDAO{
             rs = stmt.executeQuery();
 
             while (rs.next()){
-                Requirements requirement = new Requirements();
+                Requirement requirement = new Requirement();
                 requirement.setId(rs.getInt("Id"));
                 requirement.setName(rs.getString("Name"));
                 requirement.setFeature(rs.getString("Feature"));

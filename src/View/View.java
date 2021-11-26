@@ -9,7 +9,7 @@ import javax.swing.table.TableRowSorter;
 
 import Controller.SessionController;
 import Model.Project;
-import Model.Requirements;
+import Model.Requirement;
 import Model.User;
 
 import java.awt.*;
@@ -740,7 +740,7 @@ public class View extends BaseView{
                 String priority = priorityLevel.getSelectedItem().toString();
                 String state = stateLevel.getSelectedItem().toString();
 
-                Requirements requirement = new Requirements();
+                Requirement requirement = new Requirement();
 
                 //verifica se foi digitado um numero no campo numerico
                 Boolean requiredAnswers = true;
