@@ -11,7 +11,7 @@ public class SessionController {
             User userToLogin = new User();
             userToLogin.setUserName(user);
 
-            User loggedUser = userDAO.getUser(userToLogin);
+            User loggedUser = userDAO.getUser(userToLogin.getId());
 
             if(loggedUser == null) {
                 throw new Exception(" User not found! ");

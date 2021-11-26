@@ -37,10 +37,10 @@ public class UserDAO extends BaseDAO {
             System.out.println(e.getMessage());
             throw e;
         }
-        return getUser(user);
+        return getUser(user.getId());
     }
 
-    public User getUser(User user) throws Exception{
+    public User getUser(int id) throws Exception{
         PreparedStatement stmt;
         ResultSet rs;
         User user1 = null;
@@ -48,7 +48,7 @@ public class UserDAO extends BaseDAO {
         try{
             String select = "SELECT * FROM User WHERE id = ?";
             stmt = super.connection.prepareStatement(select);
-            stmt.setInt(1,user.getId());
+            stmt.setInt(1,id);
             rs = stmt.executeQuery();
 
             if (rs.next()){
@@ -89,7 +89,7 @@ public class UserDAO extends BaseDAO {
             System.out.println(e.getMessage());
             throw e;
         }
-        return getUser(user);
+        return getUser(user.getId());
     }
 
     public void deleteUser(User user) throws Exception {
