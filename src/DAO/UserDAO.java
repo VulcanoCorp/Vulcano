@@ -40,6 +40,32 @@ public class UserDAO extends BaseDAO {
         return user;
     }
 
+    public User getUserByName(User user) throws Exception{
+        PreparedStatement stmt;
+        ResultSet rs;
+
+        try{
+            String select = "SELECT * FROM User WHERE FirstName = ?";
+            stmt = super.connection.prepareStatement(select);
+            stmt.setString(1,user.getUserName());
+            rs = stmt.executeQuery();
+
+            if (rs.next()){
+                user = new User();
+                user.setId(rs.getInt("Id"));
+                user.setFirstName(rs.getString("FirstName"));
+                user.setUserName(rs.getString("UserName"));
+                user.setEmail(rs.getString("Email"));
+                user.setPassword(rs.getString("Password"));
+                user.setContactNumber(rs.getString("ContactNumber"));
+            }
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            throw e;
+        }
+        return user;
+    }
+
     public User getUserById(User user) throws Exception{
         PreparedStatement stmt;
         ResultSet rs;
