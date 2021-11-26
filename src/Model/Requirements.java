@@ -12,9 +12,9 @@ public class Requirements {
     private String module;
     private String feature;
     private LocalDateTime creationDate;
-    private String author;
+    private int author;
     private LocalDateTime lastChange;
-    private String lastChangeAuthor;
+    private int lastChangeAuthor;
     private String version;
     private String priority;
     private String complexity;
@@ -63,11 +63,11 @@ public class Requirements {
         this.creationDate = creationDate;
     }
 
-    public String getAuthor() {
+    public int getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor(int author) {
         this.author = author;
     }
 
@@ -79,11 +79,11 @@ public class Requirements {
         this.lastChange = lastChange;
     }
 
-    public String getLastChangeAuthor() {
+    public int getLastChangeAuthor() {
         return lastChangeAuthor;
     }
 
-    public void setLastChangeAuthor(String lastChangeAuthor) {
+    public void setLastChangeAuthor(int lastChangeAuthor) {
         this.lastChangeAuthor = lastChangeAuthor;
     }
 
