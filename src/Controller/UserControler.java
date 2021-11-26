@@ -11,7 +11,7 @@ public class UserControler {
 
         try(UserDAO userDAO = new UserDAO()) {
 
-            User userData= userDAO.getUser(id);
+            User userData= userDAO.getUserById(id);
             return userData;
         } catch (Exception e){
             System.out.println(e.getMessage());

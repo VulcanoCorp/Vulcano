@@ -66,18 +66,20 @@ public class UserDAO extends BaseDAO {
         return user;
     }
 
-    public User getUserById(User user) throws Exception{
+    public User getUserById(int id) throws Exception{
         PreparedStatement stmt;
         ResultSet rs;
+
+        User user = new User();
 
         try{
             String select = "SELECT * FROM User WHERE id = ?";
             stmt = super.connection.prepareStatement(select);
-            stmt.setInt(1,user.getId());
+            stmt.setInt(1,id);
             rs = stmt.executeQuery();
 
             if (rs.next()){
-                user = new User();
+
                 user.setId(rs.getInt("Id"));
                 user.setFirstName(rs.getString("FirstName"));
                 user.setUserName(rs.getString("UserName"));
@@ -114,7 +116,7 @@ public class UserDAO extends BaseDAO {
             System.out.println(e.getMessage());
             throw e;
         }
-        return getUserById(user);
+        return getUserById(user.getId());
     }
 
     public void deleteUser(User user) throws Exception {
