@@ -1,11 +1,17 @@
 package View;
 
-import java.sql.Date;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+
+import Controller.SessionController;
+import Model.Project;
+import Model.Requirements;
+import Model.User;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -75,17 +81,15 @@ public class View extends BaseView{
             public void keyPressed(KeyEvent e) {
                 if(e.getKeyCode() == KeyEvent.VK_ENTER) {
                     try {
-                        /*---------------------efetua login---------------------*/
-                        //login(userInput.getText(), passInput.getText());
                         String user = userInput.getText();
                         String password = passInput.getText();
                         if(user.equals("") || password.equals("")){
                             JOptionPane.showMessageDialog(loginContainer,"Seu usuário ou senha está vazio", "WARNING",JOptionPane.WARNING_MESSAGE);
                         }else{
-                            /*---------------------troca a tela---------------------*/
+                            SessionController request = new SessionController();
+                            User usuario =  request.login(user, password);
                             loginContainer.setVisible(false);
-                            //fazer o login
-                            setContentPane(projectsContainer(1));
+                            setContentPane(projectsContainer(usuario.getId()));
                         }
                     } catch (Exception ex) {
                         JOptionPane.showMessageDialog(loginContainer,"Seu usuário ou senha está incorreto.", "ERRO",JOptionPane.ERROR_MESSAGE);
@@ -104,21 +108,18 @@ public class View extends BaseView{
             public void keyPressed(KeyEvent e) {
                 if(e.getKeyCode() == KeyEvent.VK_ENTER) {
                     try {
-                        /*---------------------efetua login---------------------*/
-                        //login(userInput.getText(), passInput.getText());
                         String user = userInput.getText();
                         String password = passInput.getText();
                         if(user.equals("") || password.equals("")){
                             JOptionPane.showMessageDialog(loginContainer,"Seu usuário ou senha está vazio", "WARNING",JOptionPane.WARNING_MESSAGE);
                         }else{
-                            /*---------------------troca a tela---------------------*/
+                            SessionController request = new SessionController();
+                            User usuario =  request.login(user, password);
                             loginContainer.setVisible(false);
-                            //fazer o login
-                            setContentPane(projectsContainer(1));
+                            setContentPane(projectsContainer(usuario.getId()));
                         }
-                    
                     } catch (Exception ex) {
-                        JOptionPane.showMessageDialog(loginContainer,"Seu usuário ou senha está incorreto.", "WARNING",JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.showMessageDialog(loginContainer,"Seu usuário ou senha está incorreto.", "ERRO",JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }
@@ -135,17 +136,15 @@ public class View extends BaseView{
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    /*---------------------efetua login---------------------*/
-                    //login(userInput.getText(), passInput.getText());
                     String user = userInput.getText();
                     String password = passInput.getText();
                     if(user.equals("") || password.equals("")){
                         JOptionPane.showMessageDialog(loginContainer,"Seu usuário ou senha está vazio", "WARNING",JOptionPane.WARNING_MESSAGE);
                     }else{
-                        /*---------------------troca a tela---------------------*/
+                        SessionController request = new SessionController();
+                        User usuario =  request.login(user, password);
                         loginContainer.setVisible(false);
-                        //fazer o login
-                        setContentPane(projectsContainer(1));
+                        setContentPane(projectsContainer(usuario.getId()));
                     }
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(loginContainer,"Seu usuário ou senha está incorreto.", "ERRO",JOptionPane.ERROR_MESSAGE);
@@ -277,7 +276,6 @@ public class View extends BaseView{
         });
 
         /*-----------------adicione seu codigo acima--------------------*/
-       
         JScrollPane pane = new JScrollPane(table);
         pane.setBounds(150,100,400,300);
 
@@ -335,6 +333,10 @@ public class View extends BaseView{
         JButton cancelButton = super.createButton("Cancelar", 375, 420, 95, 30);
         JButton confirmationButton = super.createButton("Concluir", 475, 420, 95, 30);
 
+        if(id != -1){
+            confirmationButton.setText("Alterar");
+        }
+
         JLabel nameLabel = new JLabel("Nome do Projeto");
         JTextField nameInput = new JTextField();
         JLabel descriptionLabel = new JLabel("Descrição");
@@ -370,15 +372,28 @@ public class View extends BaseView{
             public void actionPerformed(ActionEvent e) {
                 String name = nameInput.getText();
                 String description = descriptionInput.getText();
+                Project project = new Project();
 
                 if(name.equals("") || description.equals("")){
                     JOptionPane.showMessageDialog(null, "Por favor preencha todos os campos", "WARNING", JOptionPane.WARNING_MESSAGE);
                 }else{
                     try{
-                        //envia para o banco
-                        projectContainer.setVisible(false);
-                        setContentPane(projectsContainer(userId));
-                        JOptionPane.showMessageDialog(null,"Projeto criado com sucesso", "Sucesso",JOptionPane.INFORMATION_MESSAGE);
+                        project.setName(name);
+                        project.setDescription(description);
+                        if(id == -1){
+                            //project.setOwner(userId);
+                            //envia para o banco
+                            projectContainer.setVisible(false);
+                            setContentPane(projectsContainer(userId));
+                            JOptionPane.showMessageDialog(null,"Projeto criado com sucesso", "Sucesso",JOptionPane.INFORMATION_MESSAGE);
+                        }else{
+                            //getOwner
+                            //project.setOwner(owner);
+                            //envia para o banco
+                            projectContainer.setVisible(false);
+                            setContentPane(projectsContainer(userId));
+                            JOptionPane.showMessageDialog(null,"Projeto alterado com sucesso", "Sucesso",JOptionPane.INFORMATION_MESSAGE);
+                        }
                     }catch(Exception error){
                         JOptionPane.showMessageDialog(null,"Falha na conexão tente novamente mais tarde","ERRO",JOptionPane.ERROR_MESSAGE);
                     }
@@ -701,6 +716,7 @@ public class View extends BaseView{
 
         JLabel versionLabel = createTextLabel("Versão", 325, 400, 100, 30);
         JTextField versionInput = createTextField(325, 430, 80, 30);
+        versionInput.setText("0.0.01");
 
         Border border = BorderFactory.createLineBorder(Color.BLACK);
         nameInput.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(1, 5, 1, 1)));
@@ -724,11 +740,13 @@ public class View extends BaseView{
                 String priority = priorityLevel.getSelectedItem().toString();
                 String state = stateLevel.getSelectedItem().toString();
 
+                Requirements requirement = new Requirements();
+
                 //verifica se foi digitado um numero no campo numerico
                 Boolean requiredAnswers = true;
-                Double hours;
+                Integer hours = null;
                 try{
-                    hours = Double.parseDouble(hoursString);
+                    hours = Integer.parseInt(hoursString);
                 }catch (Exception error){
                     requiredAnswers = false;
                 }
@@ -742,13 +760,34 @@ public class View extends BaseView{
                     try{
                         
                         if(requirementId == -1){
+                            requirement.setName(name);
+                            requirement.setModule(model);
+                            requirement.setEstimatedHours(hours);
+                            requirement.setPhase(phase);
+                            requirement.setVersion(version);
+                            requirement.setDescription(description);
+                            requirement.setFeature(feature);
+                            requirement.setComplexity(complexity);
+                            requirement.setPriority(priority);
+                            requirement.setState(state);
                             //envia para o banco
                             JOptionPane.showMessageDialog(null, "Requisito adicionado com sucesso!", "SUCESSO", JOptionPane.INFORMATION_MESSAGE);
                             requirementContainer.setVisible(false);
                             setContentPane(requirementsContainer(projectId,userId));
                         }else{
                             String versionName = versionInput.getText();
-
+                            requirement.setName(name);
+                            requirement.setModule(model);
+                            requirement.setEstimatedHours(hours);
+                            requirement.setPhase(phase);
+                            requirement.setVersion(version);
+                            requirement.setDescription(description);
+                            requirement.setFeature(feature);
+                            requirement.setComplexity(complexity);
+                            requirement.setPriority(priority);
+                            requirement.setState(state);
+                            requirement.setLastChangeAuthor(userId);
+                            //requirement.setCreationDate()
                             //altera no banco
                             JOptionPane.showMessageDialog(null, "Requisito alterado com sucesso!", "SUCESSO", JOptionPane.INFORMATION_MESSAGE);
                             requirementContainer.setVisible(false);
@@ -804,10 +843,9 @@ public class View extends BaseView{
             requirementContainer.add(authorLabel);
             requirementContainer.add(author);
             requirementContainer.add(versionLabel);
-            requirementContainer.add(versionInput);
             requirementContainer.add(deleteButton);
         }
-        
+        requirementContainer.add(versionInput);
         requirementContainer.add(confirmationButton);
         requirementContainer.add(cancelButton);
         requirementContainer.setVisible(true);
@@ -1051,6 +1089,8 @@ public class View extends BaseView{
                 String phone = phoneInput.getText();
                 Boolean numbersOnPhone = true;
 
+                User aplicationUser = new User();
+
                 try{
                     int convert = Integer.parseInt(phone);
                 }catch(Exception error){
@@ -1068,6 +1108,11 @@ public class View extends BaseView{
                         JOptionPane.showMessageDialog(null, "Por favor insira somente numeros no campo de telefone", "WARNING", JOptionPane.WARNING_MESSAGE);
                     }else{
                         try{
+                            aplicationUser.setUserName(user);
+                            aplicationUser.setFirstName(name);
+                            aplicationUser.setEmail(email);
+                            aplicationUser.setContactNumber(phone);
+                            aplicationUser.setPassword(password);
                             //envia para o banco
                             JOptionPane.showMessageDialog(null, "Cadastro Concluido", "SUCESSO", JOptionPane.INFORMATION_MESSAGE);
                             userContainer.setVisible(false);
@@ -1083,6 +1128,10 @@ public class View extends BaseView{
                         JOptionPane.showMessageDialog(null, "Por favor insira somente numeros no campo de telefone", "WARNING", JOptionPane.WARNING_MESSAGE);
                     }else{
                         try{
+                            aplicationUser.setUserName(user);
+                            aplicationUser.setFirstName(name);
+                            aplicationUser.setEmail(email);
+                            aplicationUser.setContactNumber(phone);
                             //envia para o banco a alteração
                             JOptionPane.showMessageDialog(null, "Alteração Concluida", "SUCESSO", JOptionPane.INFORMATION_MESSAGE);
                             userContainer.setVisible(false);

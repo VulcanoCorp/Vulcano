@@ -116,7 +116,6 @@ public class RequirementDAO extends BaseDAO{
 
     public void updateRequirement(Requirements requirement) throws Exception{
         PreparedStatement stmt;
-        ResultSet rs;
         String moment = getMoment();
 
         try {
@@ -161,13 +160,14 @@ public class RequirementDAO extends BaseDAO{
         }
     }
 
-    public ArrayList<Requirements> getAllRequirements() throws Exception {
+    public ArrayList<Requirements> getAllRequirements(int projectId) throws Exception {
         PreparedStatement stmt;
         ResultSet rs;
         ArrayList<Requirements> requirementList = new ArrayList<>();
         try{
-            String select = "SELECT * FROM Requirements";
+            String select = "SELECT * FROM Requirements WHERE Project_id = ?";
             stmt = super.connection.prepareStatement(select);
+            stmt.setInt(1,projectId);
             rs = stmt.executeQuery();
 
             while (rs.next()){
