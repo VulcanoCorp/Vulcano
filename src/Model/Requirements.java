@@ -1,6 +1,7 @@
 package Model;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 public class Requirements {
 
@@ -10,10 +11,10 @@ public class Requirements {
     private String name;
     private String module;
     private String feature;
-    private Date creationDate;
-    private String author;
-    private Date lastChange;
-    private String lastChangeAuthor;
+    private LocalDateTime creationDate;
+    private int author;
+    private LocalDateTime lastChange;
+    private int lastChangeAuthor;
     private String version;
     private String priority;
     private String complexity;
@@ -21,11 +22,11 @@ public class Requirements {
     private String state;
     private String phase;
     private String description;
+    private int projectId;
 
     public int getId() {
         return id;
     }
-
     public void setId(int id) {
         this.id = id;
     }
@@ -54,35 +55,35 @@ public class Requirements {
         this.feature = feature;
     }
 
-    public Date getCreationDate() {
+    public LocalDateTime getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Date creationDate) {
+    public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
     }
 
-    public String getAuthor() {
+    public int getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor(int author) {
         this.author = author;
     }
 
-    public Date getLastChange() {
+    public LocalDateTime getLastChange() {
         return lastChange;
     }
 
-    public void setLastChange(Date lastChange) {
+    public void setLastChange(LocalDateTime lastChange) {
         this.lastChange = lastChange;
     }
 
-    public String getLastChangeAuthor() {
+    public int getLastChangeAuthor() {
         return lastChangeAuthor;
     }
 
-    public void setLastChangeAuthor(String lastChangeAuthor) {
+    public void setLastChangeAuthor(int lastChangeAuthor) {
         this.lastChangeAuthor = lastChangeAuthor;
     }
 
@@ -140,5 +141,13 @@ public class Requirements {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
     }
 }

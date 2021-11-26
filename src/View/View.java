@@ -217,7 +217,7 @@ public class View extends BaseView{
         JButton addButton = super.createButton("Adicionar", 450, 420, 100, 30);
 
         //Define o formato/funcionamento da tabela
-        TableModel model = new DefaultTableModel(data, new String[] {"id","nome","descrição","autor"}){
+        TableModel model = new DefaultTableModel(data, new String[] {"Codigo","Nome","Descrição","Autor"}){
             public Class getColumnClass(int column) {
 
                 Class returnValue;
@@ -485,7 +485,7 @@ public class View extends BaseView{
         JButton searchButton = super.createButton("Pesquisar",450 ,60 , 100, 30);
 
         //Define o formato/funcionamento da tabela
-        TableModel model = new DefaultTableModel(data, new String[] {"id","nome","descrição","autor"}){
+        TableModel model = new DefaultTableModel(data, new String[] {"Codigo","Nome","Descrição","Autor"}){
             public Class getColumnClass(int column) {
 
                 Class returnValue;
@@ -860,7 +860,7 @@ public class View extends BaseView{
         JButton searchButton = super.createButton("Pesquisar",450 ,60 , 100, 30);
 
         //Define o formato/funcionamento da tabela
-        TableModel model = new DefaultTableModel(data, new String[] {"id","nome","descrição","autor"}){
+        TableModel model = new DefaultTableModel(data, new String[] {"Codigo","Nome","Descrição","Autor"}){
             public Class getColumnClass(int column) {
 
                 Class returnValue;
