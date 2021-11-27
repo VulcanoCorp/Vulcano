@@ -4,6 +4,7 @@ import DAO.UserDAO;
 import Model.User;
 
 public class SessionController {
+
     public User login(String user, String password) throws Exception{
 
         try(UserDAO userDAO = new UserDAO()) {

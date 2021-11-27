@@ -1,21 +1,14 @@
 package View;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
 public class BaseView extends JFrame {
 
     private String font = "Segoe UI Historic";
 
-
-    private Font headerFont = new Font(font, Font.PLAIN, 20);
-    private Font inputLabelFont = new Font(font, Font.PLAIN, 14);
     private Font textLabelFont = new Font(font, Font.PLAIN, 12);
     private Font buttonFont = new Font(font, Font.PLAIN, 11);
-    private Font buttonFontBig = new Font(font, Font.PLAIN, 15);
-
 
     protected Container currentContainer;
 
@@ -89,34 +82,10 @@ public class BaseView extends JFrame {
         super.setContentPane(contentPane);
     }
 
-
-    public JLabel createHeaderLabel(String title, int x, int y, int width, int height) {
-        JLabel headerLabel = new JLabel(title);
-        headerLabel.setFont(headerFont);
-        headerLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        headerLabel.setBounds(x,y,width,height);
-        return headerLabel;
-    }
-
-    public JLabel createInputLabel(String title, int x, int y, int width, int height) {
-        JLabel inputLabel = new JLabel(title);
-        inputLabel.setBounds(x,y,width,height);
-        inputLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        inputLabel.setVerticalAlignment(SwingConstants.CENTER);
-        inputLabel.setFont(inputLabelFont);
-        return inputLabel;
-    }
-
     public JTextField createTextField(int x, int y, int width, int height) {
         JTextField textField = new JTextField();
         textField.setBounds(x,y,width,height);
         return  textField;
-    }
-
-    public JPasswordField createPasswordField(int x, int y, int width, int height) {
-        JPasswordField passInput = new JPasswordField();
-        passInput.setBounds(x,y,width,height);
-        return passInput;
     }
 
     public JLabel createTextLabel(String title, int x, int y, int width, int height){
@@ -134,21 +103,6 @@ public class BaseView extends JFrame {
         button.setBounds(x,y,width,height);
         button.setFont(buttonFont);
         return button;
-    }
-
-    public JButton createDashboardButton(String title, int x, int y, int width, int height){
-        JButton button = new JButton();
-        button.setText(title);
-        button.setBounds(x,y,width,height);
-        button.setFont(buttonFontBig);
-        return button;
-    }
-
-    public JComboBox createComboBox(Object[] options, int x, int y, int width, int height ) {
-        JComboBox comboBox= new JComboBox();
-        comboBox.setModel(new DefaultComboBoxModel<>(options));
-        comboBox.setBounds(x,y,width,height);
-        return comboBox;
     }
 
     protected JTextArea createJTextArea(int x, int y, int width, int height) {

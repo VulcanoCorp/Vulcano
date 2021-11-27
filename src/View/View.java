@@ -10,7 +10,7 @@ import javax.swing.table.TableRowSorter;
 import Controller.ProjectController;
 import Controller.RequirementController;
 import Controller.SessionController;
-import Controller.UserControler;
+import Controller.UserController;
 import DAO.RequirementDAO;
 import Model.Project;
 import Model.Requirement;
@@ -18,7 +18,6 @@ import Model.User;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -26,7 +25,7 @@ import java.util.regex.PatternSyntaxException;
 
 
 public class View extends BaseView{
-    JFrame frameRegisterBed;
+
     public View() {
         super("Vulcano");
         super.showWindow(loginContainer(), 620,520);
@@ -792,7 +791,7 @@ public class View extends BaseView{
             LocalDateTime creationDate = defaultData.getCreationDate(); 
 
             RequirementDAO converter = new RequirementDAO();
-            UserControler username = new UserControler();
+            UserController username = new UserController();
             User defaultUser = username.getUserById(defaultData.getAuthor());
             User lastUser = username.getUserById(defaultData.getLastChangeAuthor());
             changeAuthor.setText(lastUser.getFirstName());
@@ -971,8 +970,8 @@ public class View extends BaseView{
         /*---------------menu configurado---------------*/
         /*-----------------adicione seu codigo abaixo--------------------*/
         try{
-            UserControler userControler = new UserControler();
-            ArrayList<User> usersList = userControler.listAllUser();
+            UserController userController = new UserController();
+            ArrayList<User> usersList = userController.listAllUser();
 
             Object[][] rows;
 
@@ -1182,9 +1181,9 @@ public class View extends BaseView{
         }
         User defaultUserData = null;
 
-        UserControler userControler = new UserControler();
+        UserController userController = new UserController();
         try{
-            defaultUserData = userControler.getUserById(id);
+            defaultUserData = userController.getUserById(id);
         }catch(Exception error){
             System.out.println(error.getMessage());
         }
@@ -1227,8 +1226,8 @@ public class View extends BaseView{
                             aplicationUser.setContactNumber(phone);
                             aplicationUser.setPassword(password);
                             //envia para o banco
-                            UserControler userControler = new UserControler();
-                            userControler.registerUser(aplicationUser);
+                            UserController userController = new UserController();
+                            userController.registerUser(aplicationUser);
 
                             JOptionPane.showMessageDialog(null, "Cadastro Concluido", "SUCESSO", JOptionPane.INFORMATION_MESSAGE);
                             userContainer.setVisible(false);
@@ -1250,10 +1249,10 @@ public class View extends BaseView{
                             aplicationUser.setContactNumber(phone);
                             aplicationUser.setId(id);
 
-                            UserControler userControler = new UserControler();
-                            User userBeforeChange = userControler.getUserById(id);
+                            UserController userController = new UserController();
+                            User userBeforeChange = userController.getUserById(id);
                             aplicationUser.setPassword(userBeforeChange.getPassword());
-                            userControler.saveUserChanges(aplicationUser);
+                            userController.saveUserChanges(aplicationUser);
 
                             JOptionPane.showMessageDialog(null, "Alteração Concluida", "SUCESSO", JOptionPane.INFORMATION_MESSAGE);
                             userContainer.setVisible(false);
@@ -1283,8 +1282,8 @@ public class View extends BaseView{
             @Override
             public void actionPerformed(ActionEvent e) {
                 try{
-                    UserControler userControler = new UserControler();
-                    userControler.deleteUser(id);
+                    UserController userController = new UserController();
+                    userController.deleteUser(id);
                     JOptionPane.showMessageDialog(null,"Usuário deletado com sucesso", "Sucesso",JOptionPane.INFORMATION_MESSAGE);
                     userContainer.setVisible(false);
                     setContentPane(usersContainer(userId));

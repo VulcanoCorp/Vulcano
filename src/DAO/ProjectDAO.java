@@ -38,17 +38,19 @@ public class ProjectDAO extends BaseDAO{
         return project;
     }
 
-    public Project getProjectById(Project project) throws Exception{
+    public Project getProjectById(int projectId) throws Exception{
         PreparedStatement stmt;
         ResultSet rs;
+        Project project = null;
 
         try{
             String select = "SELECT * FROM Project WHERE id = ?";
             stmt = super.connection.prepareStatement(select);
-            stmt.setInt(1,project.getId());
+            stmt.setInt(1,projectId);
             rs = stmt.executeQuery();
 
             if (rs.next()){
+                project = new Project();
                 project.setId(rs.getInt("Id"));
                 project.setName(rs.getString("Name"));
                 project.setDescription(rs.getString("Description"));
@@ -84,13 +86,13 @@ public class ProjectDAO extends BaseDAO{
         return project;
     }
 
-    public void deleteProject(Project project) throws Exception{
+    public void deleteProject(int projectId) throws Exception{
         PreparedStatement stmt;
 
         try {
             String delete = "DELETE FROM Project WHERE id = ?";
             stmt = super.connection.prepareStatement(delete);
-            stmt.setInt(1, project.getId());
+            stmt.setInt(1,projectId);
             stmt.executeUpdate();
 
         } catch (Exception e) {

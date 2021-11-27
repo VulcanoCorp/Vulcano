@@ -7,8 +7,7 @@ import java.util.ArrayList;
 
 public class RequirementController {
 
-    public ArrayList<Requirement> getAllRequirementsFromProject(int projectId) throws Exception
-    {
+    public ArrayList<Requirement> getAllRequirementsFromProject(int projectId) throws Exception {
         try(RequirementDAO requirementDAO = new RequirementDAO())
         {
             return requirementDAO.getAllRequirementsFromProject(projectId);
@@ -19,8 +18,7 @@ public class RequirementController {
         }
     }
 
-    public Requirement createRequirement(Requirement requirement) throws Exception
-    {
+    public Requirement createRequirement(Requirement requirement) throws Exception {
         try(RequirementDAO requirementDAO = new RequirementDAO())
         {
             return requirementDAO.createRequirement(requirement);
@@ -31,8 +29,7 @@ public class RequirementController {
         }
     }
 
-    public void updateRequirement(Requirement requirement) throws Exception
-    {
+    public void updateRequirement(Requirement requirement) throws Exception {
         try(RequirementDAO requirementDAO = new RequirementDAO())
         {
             requirementDAO.updateRequirement(requirement);
@@ -43,8 +40,7 @@ public class RequirementController {
         }
     }
 
-    public void deleteRequirement(int requirementId) throws Exception
-    {
+    public void deleteRequirement(int requirementId) throws Exception {
         try(RequirementDAO requirementDAO = new RequirementDAO())
         {
             requirementDAO.deleteRequirement(requirementId);
@@ -55,8 +51,7 @@ public class RequirementController {
         }
     }
 
-    public Requirement getRequirement(int id) throws Exception
-    {
+    public Requirement getRequirement(int id) throws Exception {
         try(RequirementDAO requirementDAO = new RequirementDAO())
         {
             return requirementDAO.getRequirementById(id);
