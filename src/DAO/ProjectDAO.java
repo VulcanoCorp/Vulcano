@@ -68,11 +68,12 @@ public class ProjectDAO extends BaseDAO{
         ResultSet rs;
 
         try {
-            String update = "UPDATE Project SET Name = ?, Description = ?, Owner_id = ?";
+            String update = "UPDATE Project SET Name = ?, Description = ?, Owner_id = ? WHERE id = ?";
             stmt = super.connection.prepareStatement(update, Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1,project.getName());
             stmt.setString(2,project.getDescription());
             stmt.setInt(3,project.getOwner());
+            stmt.setInt(4,project.getId());
             stmt.executeUpdate();
             rs = stmt.getGeneratedKeys();
             if (rs.next()) {

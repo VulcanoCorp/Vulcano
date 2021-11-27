@@ -40,12 +40,12 @@ public class UserDAO extends BaseDAO {
         return user;
     }
 
-    public User getUserByName(User user) throws Exception{
+    public User getUserByUserName(User user) throws Exception{
         PreparedStatement stmt;
         ResultSet rs;
 
         try{
-            String select = "SELECT * FROM User WHERE FirstName = ?";
+            String select = "SELECT * FROM User WHERE UserName = ?";
             stmt = super.connection.prepareStatement(select);
             stmt.setString(1,user.getUserName());
             rs = stmt.executeQuery();

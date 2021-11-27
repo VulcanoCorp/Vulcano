@@ -120,23 +120,22 @@ public class RequirementDAO extends BaseDAO{
         String moment = getMoment();
 
         try {
-            String update = "UPDATE Requirements SET Name = ?, Module = ?, Feature = ?, CreationDate = ?, Author_id = ?, LastChange = ?, LastChangeAuthor_id = ?, Version = ?, Priority = ?, Complexity = ?, EstimatedHours = ?, State = ?, Phase = ?, Description = ?, Project_id = ?";
+            String update = "UPDATE Requirements SET Name = ?, Module = ?, Feature = ?, LastChange = ?, LastChangeAuthor_id = ?, Version = ?, Priority = ?, Complexity = ?, EstimatedHours = ?, State = ?, Phase = ?, Description = ?, Project_id = ? WHERE id = ?";
             stmt = super.connection.prepareStatement(update, Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1,requirement.getName());
             stmt.setString(2,requirement.getModule());
             stmt.setString(3,requirement.getFeature());
-            stmt.setString(4,convertDate(requirement.getCreationDate()));
-            stmt.setInt(5,requirement.getAuthor());
-            stmt.setString(6,moment);
-            stmt.setInt(7, requirement.getLastChangeAuthor());
-            stmt.setString(8,requirement.getVersion());
-            stmt.setString(9,requirement.getPriority());
-            stmt.setString(10,requirement.getComplexity());
-            stmt.setInt(11,requirement.getEstimatedHours());
-            stmt.setString(12,requirement.getState());
-            stmt.setString(13,requirement.getPhase());
-            stmt.setString(14,requirement.getDescription());
-            stmt.setInt(15, requirement.getProjectId());
+            stmt.setString(4,moment);
+            stmt.setInt(5, requirement.getLastChangeAuthor());
+            stmt.setString(6,requirement.getVersion());
+            stmt.setString(7,requirement.getPriority());
+            stmt.setString(8,requirement.getComplexity());
+            stmt.setInt(9,requirement.getEstimatedHours());
+            stmt.setString(10,requirement.getState());
+            stmt.setString(11,requirement.getPhase());
+            stmt.setString(12,requirement.getDescription());
+            stmt.setInt(13, requirement.getProjectId());
+            stmt.setInt(14, requirement.getId());
             stmt.executeUpdate();
             
 

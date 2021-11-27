@@ -324,157 +324,195 @@ public class View extends BaseView{
         JPanel projectContainer = new JPanel();
         projectContainer.setLayout(null);
 
-        /*---------------configurando menu---------------*/
-        JButton projectsBtn = new JButton();
-        JButton usersBtn = new JButton();
-        JButton exitBtn = new JButton();
+        try{
+            /*---------------configurando menu---------------*/
+            JButton projectsBtn = new JButton();
+            JButton usersBtn = new JButton();
+            JButton exitBtn = new JButton();
 
-        JPanel menu = menuCreate(100,482,1,projectsBtn,usersBtn,exitBtn);
+            JPanel menu = menuCreate(100,482,1,projectsBtn,usersBtn,exitBtn);
 
-        usersBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                projectContainer.setVisible(false);
-    
-                if(userId != 1){
-                    setContentPane(userContainer(userId, userId));
-                }else{
-                    setContentPane(usersContainer(userId));
-                }  
-                 
-            }
-        });
-
-        exitBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                projectContainer.setVisible(false);
-                setContentPane(loginContainer());
-            }
-        });
-        /*---------------menu configurado---------------*/
-        /*-----------------adicione seu codigo abaixo--------------------*/
-        JButton requirementsButton = super.createButton("Requisitos", 150, 420, 95, 30);
-        JButton deleteButton = super.createButton("Deletar", 250, 420, 95, 30);
-        JButton cancelButton = super.createButton("Cancelar", 375, 420, 95, 30);
-        JButton confirmationButton = super.createButton("Concluir", 475, 420, 95, 30);
-
-        if(id != -1){
-            confirmationButton.setText("Alterar");
-        }
-
-        JLabel nameLabel = new JLabel("Nome do Projeto");
-        JTextField nameInput = new JTextField();
-        JLabel descriptionLabel = new JLabel("Descrição");
+            usersBtn.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    projectContainer.setVisible(false);
         
-        JTextArea descriptionInput = createJTextArea(150, 165, 400, 100);
-        descriptionInput.setEditable(true);
-        descriptionInput.setLineWrap(true);
-        descriptionInput.setText(" ");
+                    if(userId != 1){
+                        setContentPane(userContainer(userId, userId));
+                    }else{
+                        setContentPane(usersContainer(userId));
+                    }  
+                    
+                }
+            });
 
-        JScrollPane scrollDescription = new JScrollPane(descriptionInput);
-        scrollDescription.setBounds(150, 165, 400, 100);
-        scrollDescription.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+            exitBtn.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    projectContainer.setVisible(false);
+                    setContentPane(loginContainer());
+                }
+            });
+            /*---------------menu configurado---------------*/
+            /*-----------------adicione seu codigo abaixo--------------------*/
+            JButton requirementsButton = super.createButton("Requisitos", 150, 420, 95, 30);
+            JButton deleteButton = super.createButton("Deletar", 250, 420, 95, 30);
+            JButton cancelButton = super.createButton("Cancelar", 375, 420, 95, 30);
+            JButton confirmationButton = super.createButton("Concluir", 475, 420, 95, 30);
 
-        Border border = BorderFactory.createLineBorder(Color.BLACK);
-        nameInput.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(10, 10, 10, 10)));
+            
 
-        /*JScrollPane scrollDescription = new JScrollPane(descriptionInput);
-        scrollDescription.setBounds(150, 165, 400, 100);
-        scrollDescription.add(descriptionInput);
-        scrollDescription.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);*/
+            JLabel nameLabel = new JLabel("Nome do Projeto");
+            JTextField nameInput = new JTextField();
+            JLabel descriptionLabel = new JLabel("Descrição");
+            
+            JTextArea descriptionInput = createJTextArea(150, 165, 400, 100);
+            descriptionInput.setEditable(true);
+            descriptionInput.setLineWrap(true);
+            descriptionInput.setText(" ");
+
+            JScrollPane scrollDescription = new JScrollPane(descriptionInput);
+            scrollDescription.setBounds(150, 165, 400, 100);
+            scrollDescription.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
+            Border border = BorderFactory.createLineBorder(Color.BLACK);
+            nameInput.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(10, 10, 10, 10)));
+
+            JLabel projectOwnerLabel = createTextLabel("Owner: ", 150, 270, 400, 30);
 
 
-        JPanel form = new JPanel();
-        form.setLayout(new GridLayout(3,1));
-        form.setBounds(150,50,400,110);
+            JComboBox usersOptions = new JComboBox();
+            usersOptions.setBounds(150, 305 , 400, 30);
 
-        form.add(nameLabel);
-        form.add(nameInput);
-        form.add(descriptionLabel);
+            JPanel form = new JPanel();
+            form.setLayout(new GridLayout(3,1));
+            form.setBounds(150,50,400,110);
 
-        confirmationButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String name = nameInput.getText();
-                String description = descriptionInput.getText();
-                Project project = new Project();
+            form.add(nameLabel);
+            form.add(nameInput);
+            form.add(descriptionLabel);
 
-                if(name.equals("") || description.equals("")){
-                    JOptionPane.showMessageDialog(null, "Por favor preencha todos os campos", "WARNING", JOptionPane.WARNING_MESSAGE);
+            Boolean canChangeOwner = false;
+
+            ProjectController projectController = new ProjectController();
+            UserController userController = new UserController();
+            ArrayList<User> usersList = userController.listAllUser();
+            if(id != -1){
+                confirmationButton.setText("Alterar");
+                Project defaultProject = projectController.getProject(id);
+                nameInput.setText(defaultProject.getName());
+                descriptionInput.setText(defaultProject.getDescription());
+                String ownerName = userController.getUserById(defaultProject.getOwner()).getFirstName();
+                if(userId != defaultProject.getOwner()){
+                    projectOwnerLabel.setText("Owner: " + ownerName);   
                 }else{
-                    try{
-                        project.setName(name);
-                        project.setDescription(description);
-                        if(id == -1){
-                            //project.setOwner(userId);
-                            //envia para o banco
-                            projectContainer.setVisible(false);
-                            setContentPane(projectsContainer(userId));
-                            JOptionPane.showMessageDialog(null,"Projeto criado com sucesso", "Sucesso",JOptionPane.INFORMATION_MESSAGE);
-                        }else{
-                            //getOwner
-                            //project.setOwner(owner);
-                            //envia para o banco
-                            projectContainer.setVisible(false);
-                            setContentPane(projectsContainer(userId));
-                            JOptionPane.showMessageDialog(null,"Projeto alterado com sucesso", "Sucesso",JOptionPane.INFORMATION_MESSAGE);
+                    String[] users = new String [usersList.size()];
+                    for(int i = 0; i<usersList.size(); i++){
+                        users[i] = usersList.get(i).getUserName();
+                    }
+                    usersOptions.setModel(new DefaultComboBoxModel<>(users));
+                    usersOptions.setSelectedItem(ownerName);
+                    canChangeOwner = true;
+                }
+            
+            }
+
+            confirmationButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    String name = nameInput.getText();
+                    String description = descriptionInput.getText();
+                    Project project = new Project();
+
+                    if(name.equals("") || description.equals("")){
+                        JOptionPane.showMessageDialog(null, "Por favor preencha todos os campos", "WARNING", JOptionPane.WARNING_MESSAGE);
+                    }else{
+                        try{
+                            project.setName(name);
+                            project.setDescription(description);
+                            if(id == -1){
+                                project.setOwner(userId);
+                                projectController.createProject(project);
+                                projectContainer.setVisible(false);
+                                setContentPane(projectsContainer(userId));
+                                JOptionPane.showMessageDialog(null,"Projeto criado com sucesso", "Sucesso",JOptionPane.INFORMATION_MESSAGE);
+                            }else{
+                                Project originProject = projectController.getProject(id);
+                                int ownerId = originProject.getOwner();
+                                project.setId(id);
+                                if(ownerId != userId){
+                                    project.setOwner(ownerId);
+                                    projectController.updateProject(project);
+                                    projectContainer.setVisible(false);
+                                    setContentPane(projectsContainer(userId));
+                                    JOptionPane.showMessageDialog(null,"Projeto alterado com sucesso", "Sucesso",JOptionPane.INFORMATION_MESSAGE);
+                                }else{
+                                    User newOwner = usersList.get(usersOptions.getSelectedIndex());
+                                    project.setOwner(newOwner.getId());
+                                    projectController.updateProject(project);
+                                    projectContainer.setVisible(false);
+                                    setContentPane(projectsContainer(userId));
+                                    JOptionPane.showMessageDialog(null,"Projeto alterado com sucesso", "Sucesso",JOptionPane.INFORMATION_MESSAGE);
+                                }
+                            }
+                        }catch(Exception error){
+                            JOptionPane.showMessageDialog(null,"Falha na conexão tente novamente mais tarde","ERRO",JOptionPane.ERROR_MESSAGE);
                         }
+                    }
+                    
+                    
+                }
+            });
+
+            requirementsButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    projectContainer.setVisible(false);
+                    setContentPane(requirementsContainer(id, userId));
+                }
+            });
+
+            cancelButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    projectContainer.setVisible(false);
+                    setContentPane(projectsContainer(userId));
+                }
+            });
+
+            deleteButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    try{
+                        projectController.deleteProject(id);
+                        projectContainer.setVisible(false);
+                        setContentPane(projectsContainer(userId));
+                        JOptionPane.showMessageDialog(null,"Projeto deletado com sucesso", "Sucesso",JOptionPane.INFORMATION_MESSAGE);
                     }catch(Exception error){
                         JOptionPane.showMessageDialog(null,"Falha na conexão tente novamente mais tarde","ERRO",JOptionPane.ERROR_MESSAGE);
                     }
+                    
                 }
-                
-                
-            }
-        });
-
-        requirementsButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                projectContainer.setVisible(false);
-                setContentPane(requirementsContainer(id, userId));
-            }
-        });
-
-        cancelButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                projectContainer.setVisible(false);
-                setContentPane(projectsContainer(userId));
-            }
-        });
-
-        deleteButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try{
-                    //delta o projeto
-                    projectContainer.setVisible(false);
-                    setContentPane(projectsContainer(userId));
-                    JOptionPane.showMessageDialog(null,"Projeto deletado com sucesso", "Sucesso",JOptionPane.INFORMATION_MESSAGE);
-                }catch(Exception error){
-                    JOptionPane.showMessageDialog(null,"Falha na conexão tente novamente mais tarde","ERRO",JOptionPane.ERROR_MESSAGE);
-                }
-                
-            }
-        });
+            });
 
 
-        /*-----------------adicione seu codigo acima--------------------*/
-       
-        projectContainer.add(menu);
-        projectContainer.add(form);
-        projectContainer.add(scrollDescription);
-        projectContainer.add(cancelButton);
-        projectContainer.add(confirmationButton);
-        if(id != -1){
-            projectContainer.add(requirementsButton);
-            projectContainer.add(deleteButton);
-        }
+            /*-----------------adicione seu codigo acima--------------------*/
         
+            projectContainer.add(menu);
+            projectContainer.add(form);
+            projectContainer.add(scrollDescription);
+            projectContainer.add(cancelButton);
+            projectContainer.add(confirmationButton);
+            if(id != -1){
+                projectContainer.add(requirementsButton);
+                projectContainer.add(deleteButton);
+                projectContainer.add(projectOwnerLabel);
+                if(canChangeOwner == true){
+                    projectContainer.add(usersOptions);
+                }
+            }
+        }catch(Exception error){}
         projectContainer.setVisible(true);
-
         return projectContainer;
     }
 
@@ -516,8 +554,6 @@ public class View extends BaseView{
         try{
             RequirementController requirementControler = new RequirementController();
             ArrayList<Requirement> requirementList = requirementControler.getAllRequirementsFromProject(id);
-
-            int relatedProjectId = id;
 
             Object[][] rows;
 
@@ -770,7 +806,8 @@ public class View extends BaseView{
         hoursInput.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(1, 5, 1, 1)));
         phaseInput.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(1, 5, 1, 1)));
         versionInput.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(1, 5, 1, 1)));
-      
+
+        
         try{
         if(requirementId != -1){
             
@@ -787,9 +824,6 @@ public class View extends BaseView{
             complexityLevel.setSelectedItem(defaultData.getComplexity());
             priorityLevel.setSelectedItem(defaultData.getPriority());
             stateLevel.setSelectedItem(defaultData.getState());
-
-            LocalDateTime creationDate = defaultData.getCreationDate(); 
-
             RequirementDAO converter = new RequirementDAO();
             UserController username = new UserController();
             User defaultUser = username.getUserById(defaultData.getAuthor());
@@ -798,95 +832,92 @@ public class View extends BaseView{
             author.setText("Por " + defaultUser.getFirstName());
             changeDate.setText(showDate(defaultData.getLastChange()));
             creationDateLabel.setText(showDate(defaultData.getCreationDate()));
-                
-            confirmationButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    String name = nameInput.getText();
-                    String model = modelInput.getText();
-                    String hoursString = hoursInput.getText();
-                    String phase = phaseInput.getText();
-                    String version = versionInput.getText();
-                    String description = descriptionInput.getText();
-                    String feature = featureInput.getText();
-                    String complexity = complexityLevel.getSelectedItem().toString();
-                    String priority = priorityLevel.getSelectedItem().toString();
-                    String state = stateLevel.getSelectedItem().toString();
-    
-                    Requirement requirement = new Requirement();
-    
-                    //verifica se foi digitado um numero no campo numerico
-                    Boolean requiredAnswers = true;
-                    Integer hours = null;
-                    try{
-                        hours = Integer.parseInt(hoursString);
-                    }catch (Exception error){
-                        requiredAnswers = false;
-                    }
-    
-                    //realiza as verificações e avisa caso o formulário esteja incorreto
-                    if(name.equals("") || complexityLevel.getSelectedItem().equals("Selecionar") || priorityLevel.getSelectedItem().equals("Selecionar") || stateLevel.getSelectedItem().equals("Selecionar")){
-                        JOptionPane.showMessageDialog(null, "Dados inválidos, verifique se os campos estão preenchidos corretamente", "WARNING", JOptionPane.WARNING_MESSAGE);
-                    }else if(requiredAnswers == false){
-                        JOptionPane.showMessageDialog(null, "Porfavor insira um valor numérico no campo de horas estimadas", "WARNING", JOptionPane.WARNING_MESSAGE);
-                    }else{
-                        try{
-                            
-                            if(requirementId == -1){
-                                requirement.setName(name);
-                                requirement.setModule(model);
-                                requirement.setEstimatedHours(hours);
-                                requirement.setPhase(phase);
-                                requirement.setVersion(version);
-                                requirement.setDescription(description);
-                                requirement.setFeature(feature);
-                                requirement.setComplexity(complexity);
-                                requirement.setPriority(priority);
-                                requirement.setState(state);
-                                requirement.setProjectId(projectId);
-                                requirement.setAuthor(userId);
-                                //envia para o banco
-                                RequirementController reqController = new RequirementController();
-                                Requirement defaultReq = reqController.createRequirement(requirement);
-                                
-                                JOptionPane.showMessageDialog(null, "Requisito adicionado com sucesso!", "SUCESSO", JOptionPane.INFORMATION_MESSAGE);
-                                requirementContainer.setVisible(false);
-                                setContentPane(requirementContainer(projectId, defaultReq.getId(), userId));
-                            }else{
-                                String versionName = versionInput.getText();
-                                requirement.setName(name);
-                                requirement.setModule(model);
-                                requirement.setEstimatedHours(hours);
-                                requirement.setPhase(phase);
-                                requirement.setVersion(version);
-                                requirement.setDescription(description);
-                                requirement.setFeature(feature);
-                                requirement.setComplexity(complexity);
-                                requirement.setPriority(priority);
-                                requirement.setState(state);
-                                requirement.setLastChangeAuthor(userId);
-                                requirement.setCreationDate(creationDate);
-                                requirement.setId(requirementId);
-                                requirement.setProjectId(projectId);
-                                requirement.setAuthor(defaultUser.getId());
+        } 
+        confirmationButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String name = nameInput.getText();
+                String model = modelInput.getText();
+                String hoursString = hoursInput.getText();
+                String phase = phaseInput.getText();
+                String version = versionInput.getText();
+                String description = descriptionInput.getText();
+                String feature = featureInput.getText();
+                String complexity = complexityLevel.getSelectedItem().toString();
+                String priority = priorityLevel.getSelectedItem().toString();
+                String state = stateLevel.getSelectedItem().toString();
 
-                                RequirementController reqController = new RequirementController();
-                                reqController.updateRequirement(requirement);
-                                //altera no banco
-                                JOptionPane.showMessageDialog(null, "Requisito alterado com sucesso!", "SUCESSO", JOptionPane.INFORMATION_MESSAGE);
-                                requirementContainer.setVisible(false);
-                                setContentPane(requirementContainer(projectId, requirementId,userId));
-                            }
-                            
-                        }catch(Exception error){
-                            JOptionPane.showMessageDialog(null, "Falha na conexão tente novamente mais tarde", "ERRO", JOptionPane.ERROR_MESSAGE);
-                        }
-                    }
-                    
+                Requirement requirement = new Requirement();
+
+                //verifica se foi digitado um numero no campo numerico
+                Boolean requiredAnswers = true;
+                Integer hours = null;
+                try{
+                    hours = Integer.parseInt(hoursString);
+                }catch (Exception error){
+                    requiredAnswers = false;
                 }
-            });
 
-        }
+                //realiza as verificações e avisa caso o formulário esteja incorreto
+                if(name.equals("") || complexityLevel.getSelectedItem().equals("Selecionar") || priorityLevel.getSelectedItem().equals("Selecionar") || stateLevel.getSelectedItem().equals("Selecionar")){
+                    JOptionPane.showMessageDialog(null, "Dados inválidos, verifique se os campos estão preenchidos corretamente", "WARNING", JOptionPane.WARNING_MESSAGE);
+                }else if(requiredAnswers == false){
+                    JOptionPane.showMessageDialog(null, "Porfavor insira um valor numérico no campo de horas estimadas", "WARNING", JOptionPane.WARNING_MESSAGE);
+                }else{
+                    try{
+                        
+                        if(requirementId == -1){
+                            requirement.setName(name);
+                            requirement.setModule(model);
+                            requirement.setEstimatedHours(hours);
+                            requirement.setPhase(phase);
+                            requirement.setVersion(version);
+                            requirement.setDescription(description);
+                            requirement.setFeature(feature);
+                            requirement.setComplexity(complexity);
+                            requirement.setPriority(priority);
+                            requirement.setState(state);
+                            requirement.setProjectId(projectId);
+                            requirement.setAuthor(userId);
+                            //envia para o banco
+                            RequirementController reqController = new RequirementController();
+                            Requirement defaultReq = reqController.createRequirement(requirement);
+                            
+                            JOptionPane.showMessageDialog(null, "Requisito adicionado com sucesso!", "SUCESSO", JOptionPane.INFORMATION_MESSAGE);
+                            requirementContainer.setVisible(false);
+                            setContentPane(requirementContainer(projectId, defaultReq.getId(), userId));
+                        }else{
+                            String versionName = versionInput.getText();
+                            requirement.setName(name);
+                            requirement.setModule(model);
+                            requirement.setEstimatedHours(hours);
+                            requirement.setPhase(phase);
+                            requirement.setVersion(version);
+                            requirement.setDescription(description);
+                            requirement.setFeature(feature);
+                            requirement.setComplexity(complexity);
+                            requirement.setPriority(priority);
+                            requirement.setState(state);
+                            requirement.setLastChangeAuthor(userId);
+                            requirement.setId(requirementId);
+                            requirement.setProjectId(projectId);
+
+                            RequirementController reqController = new RequirementController();
+                            reqController.updateRequirement(requirement);
+                            //altera no banco
+                            JOptionPane.showMessageDialog(null, "Requisito alterado com sucesso!", "SUCESSO", JOptionPane.INFORMATION_MESSAGE);
+                            requirementContainer.setVisible(false);
+                            setContentPane(requirementContainer(projectId, requirementId,userId));
+                        }
+                        
+                    }catch(Exception error){
+                        JOptionPane.showMessageDialog(null, "Falha na conexão tente novamente mais tarde", "ERRO", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+                
+            }
+        });
+        
         }catch(Exception error){}
 
         

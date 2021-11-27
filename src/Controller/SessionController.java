@@ -8,12 +8,9 @@ public class SessionController {
     public User login(String user, String password) throws Exception{
 
         try(UserDAO userDAO = new UserDAO()) {
-
             User userToLogin = new User();
             userToLogin.setUserName(user);
-
-            User loggedUser = userDAO.getUserByName(userToLogin);
-
+            User loggedUser = userDAO.getUserByUserName(userToLogin);
             if(loggedUser == null) {
                 throw new Exception(" User not found! ");
             } else if(loggedUser.getPassword().equals(password)){
