@@ -23,12 +23,12 @@ public class RequirementDAO extends BaseDAO{
 
     public LocalDateTime convertDate(String input){
         LocalDateTime outputDate = null;
-        int year = Integer.parseInt(input.substring(0,3));
-        int day = Integer.parseInt(input.substring(8,9));
-        Month month = Month.of(Integer.parseInt(input.substring(5,6)));
-        int hour = Integer.parseInt(input.substring(11,12));
-        int minute = Integer.parseInt(input.substring(14,15));
-        int seconds = Integer.parseInt(input.substring(17,18));
+        int year = Integer.parseInt(input.substring(0,4));
+        int day = Integer.parseInt(input.substring(8,10));
+        Month month = Month.of(Integer.parseInt(input.substring(5,7)));
+        int hour = Integer.parseInt(input.substring(11,13));
+        int minute = Integer.parseInt(input.substring(14,16));
+        int seconds = Integer.parseInt(input.substring(17,19));
         outputDate = LocalDateTime.of(year, month, day, hour, minute, seconds);
         return outputDate;
     }
@@ -40,7 +40,7 @@ public class RequirementDAO extends BaseDAO{
 
     public Requirement createRequirement(Requirement requirement) throws Exception{
         PreparedStatement stmt;
-        String moment = getMoment();
+        String moment = ""+LocalDateTime.now(); ;
         ResultSet rs;        
 
         try {  
