@@ -16,9 +16,9 @@ public class ProjectController {
         }
     }
 
-    public Project getProject(Project project) throws Exception{
+    public Project getProject(int projectId) throws Exception{
         try(ProjectDAO projectDAO = new ProjectDAO()) {
-            return projectDAO.getProjectById(project);
+            return projectDAO.getProjectById(projectId);
         }catch (Exception e){
             System.out.println(e.getMessage());
             throw e;
@@ -34,9 +34,9 @@ public class ProjectController {
         }
     }
 
-    public void deleteProject(Project project) throws Exception{
+    public void deleteProject(int projectId) throws Exception{
         try(ProjectDAO projectDAO = new ProjectDAO()) {
-            projectDAO.deleteProject(project);
+            projectDAO.deleteProject(projectId);
         }catch (Exception e){
             System.out.println(e.getMessage());
             throw e;

@@ -16,7 +16,7 @@ CREATE TABLE Project(
     Name VARCHAR(60) NOT NULL,
     Description TEXT NOT NULL,
     Owner_id INT,
-    FOREIGN KEY(Owner_id) REFERENCES User(Id) 
+    FOREIGN KEY(Owner_id) REFERENCES User(Id) ON DELETE CASCADE
 );
 
 CREATE TABLE Requirements(

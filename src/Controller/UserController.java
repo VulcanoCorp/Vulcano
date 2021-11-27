@@ -6,7 +6,8 @@ import java.util.ArrayList;
 import DAO.UserDAO;
 import Model.User;
 
-public class UserControler {
+public class UserController {
+
     public User getUserById(int id) throws Exception{
 
         try(UserDAO userDAO = new UserDAO()) {
