@@ -43,11 +43,11 @@ public class RequirementController {
         }
     }
 
-    public void deleteRequirement(Requirement requirement) throws Exception
+    public void deleteRequirement(int requirementId) throws Exception
     {
         try(RequirementDAO requirementDAO = new RequirementDAO())
         {
-            requirementDAO.deleteRequirement(requirement.getId());
+            requirementDAO.deleteRequirement(requirementId);
 
         }catch (Exception e){
             System.out.println(e.getMessage());
@@ -55,11 +55,11 @@ public class RequirementController {
         }
     }
 
-    public Requirement getRequirement(Requirement requirement) throws Exception
+    public Requirement getRequirement(int id) throws Exception
     {
         try(RequirementDAO requirementDAO = new RequirementDAO())
         {
-            return requirementDAO.getRequirementById(requirement.getId());
+            return requirementDAO.getRequirementById(id);
 
         }catch (Exception e){
             System.out.println(e.getMessage());

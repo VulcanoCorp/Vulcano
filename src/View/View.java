@@ -7,14 +7,20 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
+import Controller.ProjectController;
+import Controller.RequirementController;
 import Controller.SessionController;
+import Controller.UserControler;
+import DAO.RequirementDAO;
 import Model.Project;
 import Model.Requirement;
 import Model.User;
 
 import java.awt.*;
 import java.awt.event.*;
-
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.regex.PatternSyntaxException;
 
@@ -25,6 +31,12 @@ public class View extends BaseView{
         super("Vulcano");
         super.showWindow(loginContainer(), 620,520);
     }
+
+    public String showDate(LocalDateTime time) {    
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");  
+        LocalDateTime now = time;  
+        return dtf.format(now);  
+    }  
 
     private Container loginContainer() {
 
@@ -201,94 +213,109 @@ public class View extends BaseView{
         });
         /*---------------menu configurado---------------*/
         /*-----------------adicione seu codigo abaixo--------------------*/
-        Object[][] data = {
-            {1,"projetoA","um projeto", "eu"},
-            {2,"projetoB","um projeto", "eu"},
-            {3,"projetoC","um projeto", "eu"},
-            {4,"projetoD","um projeto", "eu"},
-            {5,"projetoE","um projeto", "eu"},
-            {6,"projetoF","um projeto", "eu"},
-        };
+        try{
+            ProjectController projectControler = new ProjectController();
+            ArrayList<Project> ProjectList = projectControler.getAllProjects();
 
-        JTextField searchInput = super.createTextField(150,20,400,30);
-        JButton searchButton = super.createButton("Pesquisar",450 ,60 , 100, 30);
+            Object[][] rows;
 
-        JButton addButton = super.createButton("Adicionar", 450, 420, 100, 30);
-
-        //Define o formato/funcionamento da tabela
-        TableModel model = new DefaultTableModel(data, new String[] {"Codigo","Nome","Descrição","Autor"}){
-            public Class getColumnClass(int column) {
-
-                Class returnValue;
-
-                if ((column >= 0) && (column < getColumnCount())) {
-                    returnValue = getValueAt(0, column).getClass();
-                } else {
-                    returnValue = Object.class;
+            if(ProjectList.size() > 0){
+                rows = new Object [ProjectList.size()][3];
+                
+                for(int i = 0; i<ProjectList.size(); i++){
+                    rows[i] = new Object[]{
+                        ProjectList.get(i).getId(),
+                        ProjectList.get(i).getName()
+                    };
                 }
-                return returnValue;
+                
+            }else{
+                rows = new Object [0][0];
             }
-            @Override
-            public boolean isCellEditable(final int row, final int column) {
-                return false;
-            }
-        };
 
-        JTable table = new JTable(model);
-        final TableRowSorter<TableModel> orderer = new TableRowSorter<>(model);
-        table.setRowSorter(orderer);
+            Object[] columns = {"Codigo","Nome"};
 
-        table.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                JTable table = (JTable) e.getSource();
-                if (e.getClickCount() == 2 && table.getSelectedRow() != -1) {
-                    projectsContainer.setVisible(false);
-                    int requisitionID = (int)table.getValueAt(table.getSelectedRow(),0);
-                    setContentPane(projectContainer(requisitionID, userId));
-                }
-            }
-        });
-
-        addButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                projectsContainer.setVisible(false);
-                setContentPane(projectContainer(-1,userId));
-            }
-        });
-
-        searchButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-
-                String text = searchInput.getText();
-
-                try {
-                    if (text.length() == 0) {
-                        orderer.setRowFilter(null);
-                    } else if (text.length() != 0) {
-                        orderer.setRowFilter(RowFilter.regexFilter(text));
+            TableModel model = new DefaultTableModel(rows,columns){
+                public Class getColumnClass(int column) {
+    
+                    Class returnValue;
+    
+                    if ((column >= 0) && (column < getColumnCount())) {
+                        returnValue = getValueAt(0, column).getClass();
+                    } else {
+                        returnValue = Object.class;
                     }
-                }catch (PatternSyntaxException pse) {
-                    System.err.println("Erro");
+                    return returnValue;
                 }
-            }
-        });
+                @Override
+                public boolean isCellEditable(final int row, final int column) {
+                    return false;
+                }
+            };
+            JTable table = new JTable(model);
+            final TableRowSorter<TableModel> orderer = new TableRowSorter<>(model);
+            table.setRowSorter(orderer);
+            table.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    JTable table = (JTable) e.getSource();
+                    if (e.getClickCount() == 2 && table.getSelectedRow() != -1) {
+                        projectsContainer.setVisible(false);
+                        int requisitionID = (int)table.getValueAt(table.getSelectedRow(),0);
+                        setContentPane(projectContainer(requisitionID, userId));
+                    }
+                }
+            });
 
-        /*-----------------adicione seu codigo acima--------------------*/
-        JScrollPane pane = new JScrollPane(table);
-        pane.setBounds(150,100,400,300);
+            JTextField searchInput = super.createTextField(150,20,400,30);
+            JButton searchButton = super.createButton("Pesquisar",450 ,60 , 100, 30);
 
-        Border border = BorderFactory.createLineBorder(Color.BLACK);
-        searchInput.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(1, 5, 1, 1)));
-        pane.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(0, 0, 0, 0)));
+            JButton addButton = super.createButton("Adicionar", 450, 420, 100, 30);
 
-        projectsContainer.add(menu);
-        projectsContainer.add(searchInput);
-        projectsContainer.add(searchButton);
-        projectsContainer.add(pane);
-        projectsContainer.add(addButton);
-        projectsContainer.setVisible(true);
+
+            addButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    projectsContainer.setVisible(false);
+                    setContentPane(projectContainer(-1,userId));
+                }
+            });
+
+            searchButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+
+                    String text = searchInput.getText();
+
+                    try {
+                        if (text.length() == 0) {
+                            orderer.setRowFilter(null);
+                        } else if (text.length() != 0) {
+                            orderer.setRowFilter(RowFilter.regexFilter(text));
+                        }
+                    }catch (PatternSyntaxException pse) {
+                        System.err.println("Erro");
+                    }
+                }
+            });
+
+            /*-----------------adicione seu codigo acima--------------------*/
+            JScrollPane pane = new JScrollPane(table);
+            pane.setBounds(150,100,400,300);
+
+            Border border = BorderFactory.createLineBorder(Color.BLACK);
+            searchInput.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(1, 5, 1, 1)));
+            pane.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(0, 0, 0, 0)));
+
+            projectsContainer.add(menu);
+            projectsContainer.add(searchInput);
+            projectsContainer.add(searchButton);
+            projectsContainer.add(pane);
+            projectsContainer.add(addButton);
+            projectsContainer.setVisible(true);
+
+        }catch(Exception error){}
+
+        
 
         return projectsContainer;
     }
@@ -487,109 +514,119 @@ public class View extends BaseView{
         });
         /*---------------menu configurado---------------*/
         /*-----------------adicione seu codigo abaixo--------------------*/
-        Object[][] data = {
-            {1,"projetoA","um projeto", "eu"},
-            {2,"projetoB","um projeto", "eu"},
-            {3,"projetoC","um projeto", "eu"},
-            {4,"projetoD","um projeto", "eu"},
-            {5,"projetoE","um projeto", "eu"},
-            {6,"projetoF","um projeto", "eu"},
-        };
+        try{
+            RequirementController requirementControler = new RequirementController();
+            ArrayList<Requirement> requirementList = requirementControler.getAllRequirementsFromProject(id);
 
-        JTextField searchInput = super.createTextField(150,20,400,30);
-        JButton searchButton = super.createButton("Pesquisar",450 ,60 , 100, 30);
+            int relatedProjectId = id;
 
-        //Define o formato/funcionamento da tabela
-        TableModel model = new DefaultTableModel(data, new String[] {"Codigo","Nome","Descrição","Autor"}){
-            public Class getColumnClass(int column) {
+            Object[][] rows;
 
-                Class returnValue;
-
-                if ((column >= 0) && (column < getColumnCount())) {
-                    returnValue = getValueAt(0, column).getClass();
-                } else {
-                    returnValue = Object.class;
+            if(requirementList.size() > 0){
+                rows = new Object [requirementList.size()][3];
+                
+                for(int i = 0; i<requirementList.size(); i++){
+                    rows[i] = new Object[]{
+                        requirementList.get(i).getId(),
+                        requirementList.get(i).getName(),
+                        requirementList.get(i).getPriority(),
+                        requirementList.get(i).getComplexity()
+                    };
                 }
-                return returnValue;
+                
+            }else{
+                rows = new Object [0][0];
             }
-            @Override
-            public boolean isCellEditable(final int row, final int column) {
-                return false;
-            }
-        };
 
-        JTable table = new JTable(model);
-        final TableRowSorter<TableModel> orderer = new TableRowSorter<>(model);
-        table.setRowSorter(orderer);
+            Object[] columns = {"Codigo","Nome","Prioridade","Complexidade"};
 
-        JButton backButton = super.createButton("Voltar", 150, 420, 100, 30);
-
-        JButton addButton = super.createButton("Adicionar", 450, 420, 100, 30);
-
-        table.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                JTable table = (JTable) e.getSource();
-                if (e.getClickCount() == 2 && table.getSelectedRow() != -1) {
-                    requirementsContainer.setVisible(false);
-                    int requisitionID = (int)table.getValueAt(table.getSelectedRow(),0);
-                    setContentPane(requirementContainer(requisitionID,id,userId));
-                }
-            }
-        });
-
-        addButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                requirementsContainer.setVisible(false);
-                setContentPane(requirementContainer(id,-1,userId));
-            }
-        });
-
-        backButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                requirementsContainer.setVisible(false);
-                setContentPane(projectContainer(id, userId));
-            }
-        });
-
-        searchButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-
-                String text = searchInput.getText();
-
-                try {
-                    if (text.length() == 0) {
-                        orderer.setRowFilter(null);
-                    } else if (text.length() != 0) {
-                        orderer.setRowFilter(RowFilter.regexFilter(text));
+            TableModel model = new DefaultTableModel(rows,columns){
+                public Class getColumnClass(int column) {
+    
+                    Class returnValue;
+    
+                    if ((column >= 0) && (column < getColumnCount())) {
+                        returnValue = getValueAt(0, column).getClass();
+                    } else {
+                        returnValue = Object.class;
                     }
-                }catch (PatternSyntaxException pse) {
-                    System.err.println("Erro");
+                    return returnValue;
                 }
-            }
-        });
+                @Override
+                public boolean isCellEditable(final int row, final int column) {
+                    return false;
+                }
+            };
+            JTable table = new JTable(model);
+            final TableRowSorter<TableModel> orderer = new TableRowSorter<>(model);
+            table.setRowSorter(orderer);
+            table.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    JTable table = (JTable) e.getSource();
+                    if (e.getClickCount() == 2 && table.getSelectedRow() != -1) {
+                        requirementsContainer.setVisible(false);
+                        int requisitionID = (int)table.getValueAt(table.getSelectedRow(),0);
+                        setContentPane(requirementContainer(id, requisitionID, userId));
+                    }
+                }
+            });
+            JTextField searchInput = super.createTextField(150,20,400,30);
+            JButton searchButton = super.createButton("Pesquisar",450 ,60 , 100, 30);
 
+            JButton backButton = super.createButton("Voltar", 150, 420, 100, 30);
 
+            JButton addButton = super.createButton("Adicionar", 450, 420, 100, 30);
 
-        /*-----------------adicione seu codigo acima--------------------*/
+            addButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    requirementsContainer.setVisible(false);
+                    setContentPane(requirementContainer(id,-1,userId));
+                }
+            });
 
-        
-        JScrollPane pane = new JScrollPane(table);
-        pane.setBounds(150,100,400,300);
+            backButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    requirementsContainer.setVisible(false);
+                    setContentPane(projectContainer(id, userId));
+                }
+            });
 
-        Border border = BorderFactory.createLineBorder(Color.BLACK);
-        searchInput.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(1, 5, 1, 1)));
-        pane.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(0, 0, 0, 0)));
-        
-        requirementsContainer.add(menu);
-        requirementsContainer.add(searchInput);
-        requirementsContainer.add(searchButton);
-        requirementsContainer.add(pane);
-        requirementsContainer.add(addButton);
-        requirementsContainer.add(backButton);
-        requirementsContainer.setVisible(true);
+            searchButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+
+                    String text = searchInput.getText();
+
+                    try {
+                        if (text.length() == 0) {
+                            orderer.setRowFilter(null);
+                        } else if (text.length() != 0) {
+                            orderer.setRowFilter(RowFilter.regexFilter(text));
+                        }
+                    }catch (PatternSyntaxException pse) {
+                        System.err.println("Erro");
+                    }
+                }
+            });
+
+            JScrollPane pane = new JScrollPane(table);
+            pane.setBounds(150,100,400,300);
+
+            Border border = BorderFactory.createLineBorder(Color.BLACK);
+            searchInput.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(1, 5, 1, 1)));
+            pane.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(0, 0, 0, 0)));
+            
+            requirementsContainer.add(menu);
+            requirementsContainer.add(searchInput);
+            requirementsContainer.add(searchButton);
+            requirementsContainer.add(pane);
+            requirementsContainer.add(addButton);
+            requirementsContainer.add(backButton);
+            requirementsContainer.setVisible(true);
+
+        }catch(Exception error){}
 
         return requirementsContainer;
     }
@@ -643,6 +680,15 @@ public class View extends BaseView{
         if(requirementId != -1){
             confirmationButton.setText("Alterar");
         }
+
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                requirementContainer.setVisible(false);
+                System.out.println(projectId);
+                setContentPane(requirementsContainer(projectId, userId));
+            }
+        });
 
         JLabel nameLabel = new JLabel("Nome do requisito");
         JTextField nameInput = new JTextField();
@@ -711,8 +757,9 @@ public class View extends BaseView{
         JLabel changeAuthor = createTextLabel("Usuário", 125, 425, 100, 30);
         JLabel changeDate = createTextLabel("10-10-10", 125, 450, 100, 30);
 
-        JLabel authorLabel = createTextLabel("Criador", 225, 400, 100, 30);
-        JLabel author = createTextLabel("Usuário", 225, 425, 100, 30);
+        JLabel authorLabel = createTextLabel("Criado dia", 225, 400, 100, 30);
+        JLabel author = createTextLabel("Usuário", 225, 450, 100, 30);
+        JLabel creationDateLabel = createTextLabel("dia", 225, 425, 100, 30);
 
         JLabel versionLabel = createTextLabel("Versão", 325, 400, 100, 30);
         JTextField versionInput = createTextField(325, 430, 80, 30);
@@ -725,96 +772,135 @@ public class View extends BaseView{
         phaseInput.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(1, 5, 1, 1)));
         versionInput.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(1, 5, 1, 1)));
       
+        try{
+        if(requirementId != -1){
+            
+            RequirementController reqController = new RequirementController();
+            Requirement defaultData = reqController.getRequirement(requirementId);
 
-        confirmationButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String name = nameInput.getText();
-                String model = modelInput.getText();
-                String hoursString = hoursInput.getText();
-                String phase = phaseInput.getText();
-                String version = versionInput.getText();
-                String description = descriptionInput.getText();
-                String feature = featureInput.getText();
-                String complexity = complexityLevel.getSelectedItem().toString();
-                String priority = priorityLevel.getSelectedItem().toString();
-                String state = stateLevel.getSelectedItem().toString();
+            nameInput.setText(defaultData.getName());
+            modelInput.setText(defaultData.getModule());
+            hoursInput.setText(Integer.toString(defaultData.getEstimatedHours()));
+            phaseInput.setText(defaultData.getPhase());
+            versionInput.setText(defaultData.getVersion());
+            descriptionInput.setText(defaultData.getDescription());
+            featureInput.setText(defaultData.getFeature());
+            complexityLevel.setSelectedItem(defaultData.getComplexity());
+            priorityLevel.setSelectedItem(defaultData.getPriority());
+            stateLevel.setSelectedItem(defaultData.getState());
 
-                Requirement requirement = new Requirement();
+            LocalDateTime creationDate = defaultData.getCreationDate(); 
 
-                //verifica se foi digitado um numero no campo numerico
-                Boolean requiredAnswers = true;
-                Integer hours = null;
-                try{
-                    hours = Integer.parseInt(hoursString);
-                }catch (Exception error){
-                    requiredAnswers = false;
-                }
-
-                //realiza as verificações e avisa caso o formulário esteja incorreto
-                if(name.equals("") || complexityLevel.getSelectedItem().equals("Selecionar") || priorityLevel.getSelectedItem().equals("Selecionar") || stateLevel.getSelectedItem().equals("Selecionar")){
-                    JOptionPane.showMessageDialog(null, "Dados inválidos, verifique se os campos estão preenchidos corretamente", "WARNING", JOptionPane.WARNING_MESSAGE);
-                }else if(requiredAnswers == false){
-                    JOptionPane.showMessageDialog(null, "Porfavor insira um valor numérico no campo de horas estimadas", "WARNING", JOptionPane.WARNING_MESSAGE);
-                }else{
-                    try{
-                        
-                        if(requirementId == -1){
-                            requirement.setName(name);
-                            requirement.setModule(model);
-                            requirement.setEstimatedHours(hours);
-                            requirement.setPhase(phase);
-                            requirement.setVersion(version);
-                            requirement.setDescription(description);
-                            requirement.setFeature(feature);
-                            requirement.setComplexity(complexity);
-                            requirement.setPriority(priority);
-                            requirement.setState(state);
-                            //envia para o banco
-                            JOptionPane.showMessageDialog(null, "Requisito adicionado com sucesso!", "SUCESSO", JOptionPane.INFORMATION_MESSAGE);
-                            requirementContainer.setVisible(false);
-                            setContentPane(requirementsContainer(projectId,userId));
-                        }else{
-                            String versionName = versionInput.getText();
-                            requirement.setName(name);
-                            requirement.setModule(model);
-                            requirement.setEstimatedHours(hours);
-                            requirement.setPhase(phase);
-                            requirement.setVersion(version);
-                            requirement.setDescription(description);
-                            requirement.setFeature(feature);
-                            requirement.setComplexity(complexity);
-                            requirement.setPriority(priority);
-                            requirement.setState(state);
-                            requirement.setLastChangeAuthor(userId);
-                            //requirement.setCreationDate()
-                            //altera no banco
-                            JOptionPane.showMessageDialog(null, "Requisito alterado com sucesso!", "SUCESSO", JOptionPane.INFORMATION_MESSAGE);
-                            requirementContainer.setVisible(false);
-                            setContentPane(requirementsContainer(projectId,userId));
-                        }
-                        
-                    }catch(Exception error){
-                        JOptionPane.showMessageDialog(null, "Falha na conexão tente novamente mais tarde", "ERRO", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
+            RequirementDAO converter = new RequirementDAO();
+            UserControler username = new UserControler();
+            User defaultUser = username.getUserById(defaultData.getAuthor());
+            User lastUser = username.getUserById(defaultData.getLastChangeAuthor());
+            changeAuthor.setText(lastUser.getFirstName());
+            author.setText("Por " + defaultUser.getFirstName());
+            changeDate.setText(showDate(defaultData.getLastChange()));
+            creationDateLabel.setText(showDate(defaultData.getCreationDate()));
                 
-            }
-        });
+            confirmationButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    String name = nameInput.getText();
+                    String model = modelInput.getText();
+                    String hoursString = hoursInput.getText();
+                    String phase = phaseInput.getText();
+                    String version = versionInput.getText();
+                    String description = descriptionInput.getText();
+                    String feature = featureInput.getText();
+                    String complexity = complexityLevel.getSelectedItem().toString();
+                    String priority = priorityLevel.getSelectedItem().toString();
+                    String state = stateLevel.getSelectedItem().toString();
+    
+                    Requirement requirement = new Requirement();
+    
+                    //verifica se foi digitado um numero no campo numerico
+                    Boolean requiredAnswers = true;
+                    Integer hours = null;
+                    try{
+                        hours = Integer.parseInt(hoursString);
+                    }catch (Exception error){
+                        requiredAnswers = false;
+                    }
+    
+                    //realiza as verificações e avisa caso o formulário esteja incorreto
+                    if(name.equals("") || complexityLevel.getSelectedItem().equals("Selecionar") || priorityLevel.getSelectedItem().equals("Selecionar") || stateLevel.getSelectedItem().equals("Selecionar")){
+                        JOptionPane.showMessageDialog(null, "Dados inválidos, verifique se os campos estão preenchidos corretamente", "WARNING", JOptionPane.WARNING_MESSAGE);
+                    }else if(requiredAnswers == false){
+                        JOptionPane.showMessageDialog(null, "Porfavor insira um valor numérico no campo de horas estimadas", "WARNING", JOptionPane.WARNING_MESSAGE);
+                    }else{
+                        try{
+                            
+                            if(requirementId == -1){
+                                requirement.setName(name);
+                                requirement.setModule(model);
+                                requirement.setEstimatedHours(hours);
+                                requirement.setPhase(phase);
+                                requirement.setVersion(version);
+                                requirement.setDescription(description);
+                                requirement.setFeature(feature);
+                                requirement.setComplexity(complexity);
+                                requirement.setPriority(priority);
+                                requirement.setState(state);
+                                requirement.setProjectId(projectId);
+                                requirement.setAuthor(userId);
+                                //envia para o banco
+                                RequirementController reqController = new RequirementController();
+                                Requirement defaultReq = reqController.createRequirement(requirement);
+                                
+                                JOptionPane.showMessageDialog(null, "Requisito adicionado com sucesso!", "SUCESSO", JOptionPane.INFORMATION_MESSAGE);
+                                requirementContainer.setVisible(false);
+                                setContentPane(requirementContainer(projectId, defaultReq.getId(), userId));
+                            }else{
+                                String versionName = versionInput.getText();
+                                requirement.setName(name);
+                                requirement.setModule(model);
+                                requirement.setEstimatedHours(hours);
+                                requirement.setPhase(phase);
+                                requirement.setVersion(version);
+                                requirement.setDescription(description);
+                                requirement.setFeature(feature);
+                                requirement.setComplexity(complexity);
+                                requirement.setPriority(priority);
+                                requirement.setState(state);
+                                requirement.setLastChangeAuthor(userId);
+                                requirement.setCreationDate(creationDate);
+                                requirement.setId(requirementId);
+                                requirement.setProjectId(projectId);
+                                requirement.setAuthor(defaultUser.getId());
 
-        cancelButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                requirementContainer.setVisible(false);
-                setContentPane(requirementsContainer(projectId, userId));
-            }
-        });
+                                RequirementController reqController = new RequirementController();
+                                reqController.updateRequirement(requirement);
+                                //altera no banco
+                                JOptionPane.showMessageDialog(null, "Requisito alterado com sucesso!", "SUCESSO", JOptionPane.INFORMATION_MESSAGE);
+                                requirementContainer.setVisible(false);
+                                setContentPane(requirementContainer(projectId, requirementId,userId));
+                            }
+                            
+                        }catch(Exception error){
+                            JOptionPane.showMessageDialog(null, "Falha na conexão tente novamente mais tarde", "ERRO", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                    
+                }
+            });
+
+        }
+        }catch(Exception error){}
+
+        
+
+        
 
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try{
-                    //delta o projeto
+
+                    RequirementController reqController = new RequirementController();
+                    reqController.deleteRequirement(requirementId);
                     JOptionPane.showMessageDialog(null,"Requisito deletado com sucesso", "Sucesso",JOptionPane.INFORMATION_MESSAGE);
                     requirementContainer.setVisible(false);
                     setContentPane(requirementsContainer(projectId,userId));
@@ -844,6 +930,7 @@ public class View extends BaseView{
             requirementContainer.add(author);
             requirementContainer.add(versionLabel);
             requirementContainer.add(deleteButton);
+            requirementContainer.add(creationDateLabel);
         }
         requirementContainer.add(versionInput);
         requirementContainer.add(confirmationButton);
@@ -852,8 +939,6 @@ public class View extends BaseView{
 
         return requirementContainer;
     }
-
-   
 
     private Container usersContainer(int userId) {
 
@@ -885,54 +970,65 @@ public class View extends BaseView{
         });
         /*---------------menu configurado---------------*/
         /*-----------------adicione seu codigo abaixo--------------------*/
-        Object[][] data = {
-            {1,"projetoA","um projeto", "eu"},
-            {2,"projetoB","um projeto", "eu"},
-            {3,"projetoC","um projeto", "eu"},
-            {4,"projetoD","um projeto", "eu"},
-            {5,"projetoE","um projeto", "eu"},
-            {6,"projetoF","um projeto", "eu"},
-        };
+        try{
+            UserControler userControler = new UserControler();
+            ArrayList<User> usersList = userControler.listAllUser();
 
-        JTextField searchInput = super.createTextField(150,20,400,30);
+            Object[][] rows;
+
+            if(usersList.size() > 0){
+                rows = new Object [usersList.size()][3];
+                
+                for(int i = 0; i<usersList.size(); i++){
+                    rows[i] = new Object[]{
+                        usersList.get(i).getId(),
+                        usersList.get(i).getFirstName(),
+                        usersList.get(i).getEmail(),
+                        usersList.get(i).getContactNumber()
+                    };
+                }
+                
+            }else{
+                rows = new Object [0][0];
+            }
+
+            Object[] columns = {"Codigo","Nome","E-mail","Telefone"};
+
+            TableModel model = new DefaultTableModel(rows,columns){
+                public Class getColumnClass(int column) {
+    
+                    Class returnValue;
+    
+                    if ((column >= 0) && (column < getColumnCount())) {
+                        returnValue = getValueAt(0, column).getClass();
+                    } else {
+                        returnValue = Object.class;
+                    }
+                    return returnValue;
+                }
+                @Override
+                public boolean isCellEditable(final int row, final int column) {
+                    return false;
+                }
+            };
+            JTable table = new JTable(model);
+            final TableRowSorter<TableModel> orderer = new TableRowSorter<>(model);
+            table.setRowSorter(orderer);
+            table.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    JTable table = (JTable) e.getSource();
+                    if (e.getClickCount() == 2 && table.getSelectedRow() != -1) {
+                        usersContainer.setVisible(false);
+                        int requisitionID = (int)table.getValueAt(table.getSelectedRow(),0);
+                        setContentPane(userContainer(requisitionID, userId));
+                    }
+                }
+            });
+
+            JTextField searchInput = super.createTextField(150,20,400,30);
         JButton searchButton = super.createButton("Pesquisar",450 ,60 , 100, 30);
-
-        //Define o formato/funcionamento da tabela
-        TableModel model = new DefaultTableModel(data, new String[] {"Codigo","Nome","Descrição","Autor"}){
-            public Class getColumnClass(int column) {
-
-                Class returnValue;
-
-                if ((column >= 0) && (column < getColumnCount())) {
-                    returnValue = getValueAt(0, column).getClass();
-                } else {
-                    returnValue = Object.class;
-                }
-                return returnValue;
-            }
-            @Override
-            public boolean isCellEditable(final int row, final int column) {
-                return false;
-            }
-        };
-
-        JTable table = new JTable(model);
-        final TableRowSorter<TableModel> orderer = new TableRowSorter<>(model);
-        table.setRowSorter(orderer);
-
         JButton addButton = super.createButton("Adicionar", 450, 420, 100, 30);
-
-        table.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                JTable table = (JTable) e.getSource();
-                if (e.getClickCount() == 2 && table.getSelectedRow() != -1) {
-                    usersContainer.setVisible(false);
-                    int requisitionID = (int)table.getValueAt(table.getSelectedRow(),0);
-                    setContentPane(userContainer(requisitionID, userId));
-                }
-            }
-        });
 
         searchButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -974,6 +1070,12 @@ public class View extends BaseView{
         usersContainer.setVisible(true);
 
         return usersContainer;
+
+        }catch( Exception error){
+            System.out.println(error);
+            return usersContainer;
+        }
+        
     }
 
     private Container userContainer(int id, int userId) {
@@ -1078,6 +1180,25 @@ public class View extends BaseView{
             form.add(confirmationLabel);
             form.add(confirmationInput);
         }
+        User defaultUserData = null;
+
+        UserControler userControler = new UserControler();
+        try{
+            defaultUserData = userControler.getUserById(id);
+        }catch(Exception error){
+            System.out.println(error.getMessage());
+        }
+
+        if(defaultUserData != null){
+            nameInput.setText(defaultUserData.getFirstName());
+            userInput.setText(defaultUserData.getUserName());
+            emailInput.setText(defaultUserData.getEmail());
+            phoneInput.setText(defaultUserData.getContactNumber());
+        }
+        
+
+        
+        
         
 
         confirmationButton.addActionListener(new ActionListener() {
@@ -1091,12 +1212,6 @@ public class View extends BaseView{
 
                 User aplicationUser = new User();
 
-                try{
-                    int convert = Integer.parseInt(phone);
-                }catch(Exception error){
-                    numbersOnPhone = false;
-                }
-
                 if(id == -1){
                     String password = passwordInput.getText();
                     String confirmation = confirmationInput.getText();
@@ -1104,8 +1219,6 @@ public class View extends BaseView{
                         JOptionPane.showMessageDialog(null, "Dados inválidos, verifique se os campos estão preenchidos corretamente", "WARNING", JOptionPane.WARNING_MESSAGE);
                     }else if(password.equals(confirmation) == false){
                         JOptionPane.showMessageDialog(null, "As senhas inseridas não correspondem!", "WARNING", JOptionPane.WARNING_MESSAGE);
-                    }else if(numbersOnPhone == false){
-                        JOptionPane.showMessageDialog(null, "Por favor insira somente numeros no campo de telefone", "WARNING", JOptionPane.WARNING_MESSAGE);
                     }else{
                         try{
                             aplicationUser.setUserName(user);
@@ -1114,6 +1227,9 @@ public class View extends BaseView{
                             aplicationUser.setContactNumber(phone);
                             aplicationUser.setPassword(password);
                             //envia para o banco
+                            UserControler userControler = new UserControler();
+                            userControler.registerUser(aplicationUser);
+
                             JOptionPane.showMessageDialog(null, "Cadastro Concluido", "SUCESSO", JOptionPane.INFORMATION_MESSAGE);
                             userContainer.setVisible(false);
                             setContentPane(loginContainer());
@@ -1132,10 +1248,16 @@ public class View extends BaseView{
                             aplicationUser.setFirstName(name);
                             aplicationUser.setEmail(email);
                             aplicationUser.setContactNumber(phone);
-                            //envia para o banco a alteração
+                            aplicationUser.setId(id);
+
+                            UserControler userControler = new UserControler();
+                            User userBeforeChange = userControler.getUserById(id);
+                            aplicationUser.setPassword(userBeforeChange.getPassword());
+                            userControler.saveUserChanges(aplicationUser);
+
                             JOptionPane.showMessageDialog(null, "Alteração Concluida", "SUCESSO", JOptionPane.INFORMATION_MESSAGE);
                             userContainer.setVisible(false);
-                            setContentPane(loginContainer());
+                            setContentPane(userContainer(id, userId));
                         }catch(Exception error){
                             JOptionPane.showMessageDialog(null, "Falha na conexão tente novamente mais tarde", "ERRO", JOptionPane.ERROR_MESSAGE);
                         }
@@ -1161,12 +1283,13 @@ public class View extends BaseView{
             @Override
             public void actionPerformed(ActionEvent e) {
                 try{
-                    //delta o usuário
+                    UserControler userControler = new UserControler();
+                    userControler.deleteUser(id);
                     JOptionPane.showMessageDialog(null,"Usuário deletado com sucesso", "Sucesso",JOptionPane.INFORMATION_MESSAGE);
                     userContainer.setVisible(false);
                     setContentPane(usersContainer(userId));
                 }catch(Exception error){
-                    JOptionPane.showMessageDialog(null,"Falha na conexão tente novamente mais tarde","ERRO",JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null,"Antes de deletar transfira os projetos e os requisitos desse funcionario para outro!","ERRO",JOptionPane.ERROR_MESSAGE);
                 }
                 
             }

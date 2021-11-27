@@ -34,8 +34,7 @@ public class UserControler {
     public User saveUserChanges(User user) throws Exception{
 
         try(UserDAO userDAO = new UserDAO()) {
-            User userData= userDAO.updateUser(user);
-            return userData;
+            return userDAO.updateUser(user);
         } catch (Exception e){
             System.out.println(e.getMessage());
             throw e;
@@ -47,6 +46,18 @@ public class UserControler {
         try(UserDAO userDAO = new UserDAO()) {
 
             userDAO.createUser(user);
+            
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+            throw e;
+        }
+    }
+
+    public void deleteUser(int id) throws Exception{
+
+        try(UserDAO userDAO = new UserDAO()) {
+            userDAO.prepareDelete(id);
+            userDAO.deleteUser(id);
             
         } catch (Exception e){
             System.out.println(e.getMessage());

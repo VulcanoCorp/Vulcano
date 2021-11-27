@@ -99,13 +99,14 @@ public class UserDAO extends BaseDAO {
         ResultSet rs;
 
         try {
-            String update = "UPDATE User SET FirstName = ?, UserName = ?, Email = ?, Password = ?, ContactNumber = ?";
+            String update = "UPDATE User SET FirstName = ?, UserName = ?, Email = ?, Password = ?, ContactNumber = ? WHERE id =?";
             stmt = super.connection.prepareStatement(update, Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1,user.getFirstName());
             stmt.setString(2,user.getUserName());
             stmt.setString(3,user.getEmail());
             stmt.setString(4,user.getPassword());
             stmt.setString(5,user.getContactNumber());
+            stmt.setInt(6, user.getId());
             stmt.executeUpdate();
             rs = stmt.getGeneratedKeys();
             if (rs.next()) {
@@ -119,13 +120,13 @@ public class UserDAO extends BaseDAO {
         return getUserById(user.getId());
     }
 
-    public void deleteUser(User user) throws Exception {
+    public void deleteUser(int id) throws Exception {
         PreparedStatement stmt;
 
         try {
             String delete = "DELETE FROM User WHERE id = ?";
             stmt = super.connection.prepareStatement(delete);
-            stmt.setInt(1, user.getId());
+            stmt.setInt(1, id);
             stmt.executeUpdate();
 
         } catch (Exception e) {
@@ -160,5 +161,30 @@ public class UserDAO extends BaseDAO {
             throw e;
         }
         return userList;
+    }
+
+    public void prepareDelete(int id) throws Exception{
+        PreparedStatement stmt;
+
+        try {
+            String update = "UPDATE Requirements SET Author_id = 1 WHERE Author_id = ?";
+            stmt = super.connection.prepareStatement(update, Statement.RETURN_GENERATED_KEYS);
+            stmt.setInt(1,id);
+            stmt.executeUpdate();
+
+            String update1 ="UPDATE Requirements SET LastChangeAuthor_id = 1 WHERE LastChangeAuthor_id = ?";
+            stmt = super.connection.prepareStatement(update1, Statement.RETURN_GENERATED_KEYS);
+            stmt.setInt(1,id);
+            stmt.executeUpdate();
+            
+            String update2 ="UPDATE Project SET Owner_id = 1 WHERE Owner_id = ?";
+            stmt = super.connection.prepareStatement(update2, Statement.RETURN_GENERATED_KEYS);
+            stmt.setInt(1,id);
+            stmt.executeUpdate();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw e;
+        }
     }
 }

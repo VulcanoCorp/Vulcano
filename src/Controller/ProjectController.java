@@ -43,7 +43,7 @@ public class ProjectController {
         }
     }
 
-    public ArrayList<Project> getAllProjects(Project project) throws Exception{
+    public ArrayList<Project> getAllProjects() throws Exception{
         try(ProjectDAO projectDAO = new ProjectDAO()) {
             return projectDAO.getAllProjects();
         }catch (Exception e){
