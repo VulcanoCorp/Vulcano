@@ -42,7 +42,7 @@ public class View extends BaseView{
         JPanel loginContainer = new JPanel();
         loginContainer.setLayout(null);
 
-        ImageIcon img = new ImageIcon("Resource/HabbibLogo.png");
+        ImageIcon img = new ImageIcon("Resource/vulcano.png");
         JLabel logoLabel = new JLabel(img);
         logoLabel.setBounds(0, 10, 620, 120);
 
@@ -392,7 +392,7 @@ public class View extends BaseView{
             form.add(nameInput);
             form.add(descriptionLabel);
 
-            Boolean canChangeOwner = false;
+            boolean canChangeOwner = false;
 
             ProjectController projectController = new ProjectController();
             UserController userController = new UserController();
@@ -403,9 +403,7 @@ public class View extends BaseView{
                 nameInput.setText(defaultProject.getName());
                 descriptionInput.setText(defaultProject.getDescription());
                 String ownerName = userController.getUserById(defaultProject.getOwner()).getFirstName();
-                if(userId != defaultProject.getOwner()){
-                    projectOwnerLabel.setText("Owner: " + ownerName);   
-                }else{
+                if(userId == 1 || userId == defaultProject.getOwner()){
                     String[] users = new String [usersList.size()];
                     for(int i = 0; i<usersList.size(); i++){
                         users[i] = usersList.get(i).getUserName();
@@ -413,6 +411,8 @@ public class View extends BaseView{
                     usersOptions.setModel(new DefaultComboBoxModel<>(users));
                     usersOptions.setSelectedItem(ownerName);
                     canChangeOwner = true;
+                }else{
+                    projectOwnerLabel.setText("Owner: " + ownerName);
                 }
             
             }
@@ -720,7 +720,7 @@ public class View extends BaseView{
             @Override
             public void actionPerformed(ActionEvent e) {
                 requirementContainer.setVisible(false);
-                System.out.println(projectId);
+                //System.out.println(projectId);
                 setContentPane(requirementsContainer(projectId, userId));
             }
         });

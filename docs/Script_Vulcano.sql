@@ -36,7 +36,7 @@ CREATE TABLE Requirements(
     Phase VARCHAR(30),
     Description TEXT,
     Project_id INT,
-    FOREIGN KEY(project_id) REFERENCES Project(Id),
+    FOREIGN KEY(project_id) REFERENCES Project(Id) ON DELETE CASCADE,
     FOREIGN KEY(Author_id) REFERENCES User(Id),
     FOREIGN KEY(LastChangeAuthor_id) REFERENCES User(Id)
 );
