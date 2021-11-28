@@ -1,8 +1,12 @@
+[![MySql 8.0.26](https://img.shields.io/badge/MySql-8.0.26-blue)](https://www.mysql.com/downloads/)
 [![Java 2.2](https://img.shields.io/badge/Java-16.0.1-blue)](https://www.oracle.com/java/technologies/javase-jdk13-downloads.html)
 
 # Vulcano
 
-Vulcano is a project manager system focused on software engenieer pratices and methods. 
+Vulcano is a project management system focused on software engineering practices and methods.
+
+## Database Diagram
+![img.png](img.png)
 
 ## Database Diagram
 
@@ -17,5 +21,7 @@ Vulcano is a project manager system focused on software engenieer pratices and m
 ## Authors
 
 * **Arthur M P Camargo** - (https://github.com/arthurmpc)
+* **Tamara Nubia** - (https://github.com/nubianune5)
+* **Victor M Oliveira** - (https://github.com/vimigueloli)
 * **Wallace M M Pontes** - (https://github.com/Wallacemmp)
 
