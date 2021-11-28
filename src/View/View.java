@@ -1,6 +1,5 @@
 package View;
 
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
@@ -67,7 +66,6 @@ public class View extends BaseView{
         JButton registerButton = new JButton("Criar uma!");
         container.add(registerLabel);
         container.add(registerButton);
-
 
         JPanel form = new JPanel();
         form.setLayout(new GridLayout(8,1));
@@ -183,7 +181,6 @@ public class View extends BaseView{
         JPanel projectsContainer = new JPanel();
         projectsContainer.setLayout(null);
 
-        /*---------------configurando menu---------------*/
         JButton projectsBtn = new JButton();
         JButton usersBtn = new JButton();
         JButton exitBtn = new JButton();
@@ -210,8 +207,7 @@ public class View extends BaseView{
                 setContentPane(loginContainer());
             }
         });
-        /*---------------menu configurado---------------*/
-        /*-----------------adicione seu codigo abaixo--------------------*/
+
         try{
             ProjectController projectControler = new ProjectController();
             ArrayList<Project> ProjectList = projectControler.getAllProjects();
@@ -297,7 +293,6 @@ public class View extends BaseView{
                 }
             });
 
-            /*-----------------adicione seu codigo acima--------------------*/
             JScrollPane pane = new JScrollPane(table);
             pane.setBounds(150,100,400,300);
 
@@ -325,7 +320,7 @@ public class View extends BaseView{
         projectContainer.setLayout(null);
 
         try{
-            /*---------------configurando menu---------------*/
+
             JButton projectsBtn = new JButton();
             JButton usersBtn = new JButton();
             JButton exitBtn = new JButton();
@@ -353,8 +348,7 @@ public class View extends BaseView{
                     setContentPane(loginContainer());
                 }
             });
-            /*---------------menu configurado---------------*/
-            /*-----------------adicione seu codigo abaixo--------------------*/
+
             JButton requirementsButton = super.createButton("Requisitos", 150, 420, 95, 30);
             JButton deleteButton = super.createButton("Deletar", 250, 420, 95, 30);
             JButton cancelButton = super.createButton("Cancelar", 375, 420, 95, 30);
@@ -495,9 +489,6 @@ public class View extends BaseView{
                 }
             });
 
-
-            /*-----------------adicione seu codigo acima--------------------*/
-        
             projectContainer.add(menu);
             projectContainer.add(form);
             projectContainer.add(scrollDescription);
@@ -521,7 +512,6 @@ public class View extends BaseView{
         JPanel requirementsContainer = new JPanel();
         requirementsContainer.setLayout(null);
 
-        /*---------------configurando menu---------------*/
         JButton projectsBtn = new JButton();
         JButton usersBtn = new JButton();
         JButton exitBtn = new JButton();
@@ -549,8 +539,7 @@ public class View extends BaseView{
                 setContentPane(loginContainer());
             }
         });
-        /*---------------menu configurado---------------*/
-        /*-----------------adicione seu codigo abaixo--------------------*/
+
         try{
             RequirementController requirementControler = new RequirementController();
             ArrayList<Requirement> requirementList = requirementControler.getAllRequirementsFromProject(id);
@@ -671,7 +660,6 @@ public class View extends BaseView{
         JPanel requirementContainer = new JPanel();
         requirementContainer.setLayout(null);
 
-        /*---------------configurando menu---------------*/
         JButton projectsBtn = new JButton();
         JButton usersBtn = new JButton();
         JButton exitBtn = new JButton();
@@ -706,8 +694,7 @@ public class View extends BaseView{
                 setContentPane(loginContainer());
             }
         });
-        /*---------------menu configurado---------------*/
-        /*-----------------adicione seu codigo abaixo--------------------*/
+
         JButton cancelButton = super.createButton("Cancelar", 420, 430, 80, 30);
         JButton confirmationButton = super.createButton("Concluir", 502, 430, 80, 30);
         JButton deleteButton = super.createButton("Deletar", 420, 398, 162, 30);
@@ -720,7 +707,6 @@ public class View extends BaseView{
             @Override
             public void actionPerformed(ActionEvent e) {
                 requirementContainer.setVisible(false);
-                //System.out.println(projectId);
                 setContentPane(requirementsContainer(projectId, userId));
             }
         });
@@ -849,7 +835,6 @@ public class View extends BaseView{
 
                 Requirement requirement = new Requirement();
 
-                //verifica se foi digitado um numero no campo numerico
                 Boolean requiredAnswers = true;
                 Integer hours = null;
                 try{
@@ -858,7 +843,6 @@ public class View extends BaseView{
                     requiredAnswers = false;
                 }
 
-                //realiza as verificações e avisa caso o formulário esteja incorreto
                 if(name.equals("") || complexityLevel.getSelectedItem().equals("Selecionar") || priorityLevel.getSelectedItem().equals("Selecionar") || stateLevel.getSelectedItem().equals("Selecionar")){
                     JOptionPane.showMessageDialog(null, "Dados inválidos, verifique se os campos estão preenchidos corretamente", "WARNING", JOptionPane.WARNING_MESSAGE);
                 }else if(requiredAnswers == false){
@@ -920,10 +904,6 @@ public class View extends BaseView{
         
         }catch(Exception error){}
 
-        
-
-        
-
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -940,10 +920,6 @@ public class View extends BaseView{
                 
             }
         });
-
-
-
-        /*-----------------adicione seu codigo acima--------------------*/
        
         requirementContainer.add(menu);
         requirementContainer.add(form);
@@ -975,8 +951,6 @@ public class View extends BaseView{
         JPanel usersContainer = new JPanel();
         usersContainer.setLayout(null);
 
-
-        /*---------------configurando menu---------------*/
         JButton projectsBtn = new JButton();
         JButton usersBtn = new JButton();
         JButton exitBtn = new JButton();
@@ -998,8 +972,7 @@ public class View extends BaseView{
                 setContentPane(loginContainer());
             }
         });
-        /*---------------menu configurado---------------*/
-        /*-----------------adicione seu codigo abaixo--------------------*/
+
         try{
             UserController userController = new UserController();
             ArrayList<User> usersList = userController.listAllUser();
@@ -1084,7 +1057,6 @@ public class View extends BaseView{
                 setContentPane(userContainer(-1,userId));
             }
         });
-        /*-----------------adicione seu codigo acima--------------------*/
 
         JScrollPane pane = new JScrollPane(table);
         pane.setBounds(150,100,400,300);
@@ -1113,7 +1085,6 @@ public class View extends BaseView{
         JPanel userContainer = new JPanel();
         userContainer.setLayout(null);
 
-        /*---------------configurando menu---------------*/
         JButton projectsBtn = new JButton();
         JButton usersBtn = new JButton();
         JButton exitBtn = new JButton();
@@ -1148,8 +1119,7 @@ public class View extends BaseView{
                 setContentPane(loginContainer());
             }
         });
-        /*---------------menu configurado---------------*/
-        /*-----------------adicione seu codigo abaixo--------------------*/
+      
         JButton cancelButton = super.createButton("Cancelar", 375, 420, 95, 30);
         JButton confirmationButton = super.createButton("Concluir", 475, 420, 95, 30);
         JButton deleteButton = super.createButton("Deletar", 150, 420, 95, 30);
@@ -1195,7 +1165,6 @@ public class View extends BaseView{
         passwordInput.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(1, 5, 1, 1)));
         confirmationInput.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(1, 5, 1, 1)));
         
-
         form.add(nameLabel);
         form.add(nameInput);
         form.add(userLabel);
@@ -1225,11 +1194,6 @@ public class View extends BaseView{
             emailInput.setText(defaultUserData.getEmail());
             phoneInput.setText(defaultUserData.getContactNumber());
         }
-        
-
-        
-        
-        
 
         confirmationButton.addActionListener(new ActionListener() {
             @Override
@@ -1324,8 +1288,6 @@ public class View extends BaseView{
                 
             }
         });
-
-        /*-----------------adicione seu codigo acima--------------------*/
         
         if(userId != -1){
             userContainer.add(menu);
@@ -1342,5 +1304,4 @@ public class View extends BaseView{
 
         return userContainer;
     }
-    
 }

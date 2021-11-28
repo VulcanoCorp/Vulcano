@@ -8,6 +8,8 @@ Vulcano is a project management system focused on software engineering practices
 ## Database Diagram
 ![img.png](img.png)
 
+## Database Diagram
+
 ## Habbib project pull request process
 
 * **main:** production
@@ -22,5 +24,4 @@ Vulcano is a project management system focused on software engineering practices
 * **Tamara Nubia** - (https://github.com/nubianune5)
 * **Victor M Oliveira** - (https://github.com/vimigueloli)
 * **Wallace M M Pontes** - (https://github.com/Wallacemmp)
-
 
