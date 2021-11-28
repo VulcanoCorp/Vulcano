@@ -46,8 +46,8 @@ public class BaseView extends JFrame {
         menuSpace5.setLayout(null);
         JPanel menuSpace6 = new JPanel();
         menuSpace6.setLayout(null);
-        JLabel usersPage = new JLabel("Usuarios");
-        JLabel projectsPage = new JLabel("Projetos");
+        JLabel usersPage = new JLabel("Usuarios",SwingConstants.CENTER);
+        JLabel projectsPage = new JLabel("Projetos",SwingConstants.CENTER);
 
 
         if(mode == 1){
