@@ -1119,7 +1119,7 @@ public class View extends BaseView{
                 setContentPane(loginContainer());
             }
         });
-        
+
         JButton cancelButton = super.createButton("Cancelar", 375, 420, 95, 30);
         JButton confirmationButton = super.createButton("Concluir", 475, 420, 95, 30);
         JButton deleteButton = super.createButton("Deletar", 150, 420, 95, 30);
